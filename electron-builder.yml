@@ -1,0 +1,8 @@
+linux:
+  target:
+    # - deb
+    - AppImage
+
+appImage:
+  # systemIntegration: "doNotAsk"
+  systemIntegration: "ask"

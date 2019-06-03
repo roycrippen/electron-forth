@@ -1,0 +1,28 @@
+{
+  "name": "electron-forth",
+  "version": "0.0.1",
+  "license": "BSD3",
+  "description": "Electron JS version of Forth",
+  "homepage": "https://github.com/roycrippen/electron-forth",
+  "author": {
+    "name": "Roy Crippen",
+    "email": "roycrippen@gmail.com"
+  },
+  "scripts": {
+    "dev": "electron-webpack dev",
+    "h": "electron-webpack --help",
+    "compile": "electron-webpack",
+    "dist": "yarn compile && electron-builder"
+  },
+  "dependencies": {
+    "source-map-support": "^0.5.10"
+  },
+  "devDependencies": {
+    "electron": "4.0.1",
+    "electron-builder": "20.38.4",
+    "electron-webpack": "^2.6.2",
+    "electron-webpack-ts": "^3.2.0",
+    "typescript": "^3.5.1",
+    "webpack": "4.28.4"
+  }
+}
