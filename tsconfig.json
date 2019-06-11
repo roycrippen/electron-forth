@@ -14,6 +14,7 @@
     "experimentalDecorators": true,
     "outDir": "dist-js",
     "baseUrl": ".",
+    "allowJs": true,
     "paths": {
       "*": [
         "node_modules/*"

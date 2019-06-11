@@ -1,6 +1,8 @@
-# electron-ts-template
+# electron-forth
 
-A basic [Electron](https://electronjs.org) TypeScript template.
+An [Electron](https://electronjs.org) TypeScript of implementation of forth with step debugging.
+
+From a fork of [jsForth](https://github.com/brendanator/jsForth).
 
 ### Quick Start
 
