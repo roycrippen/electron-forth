@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title from index.html</title>
+  <link rel="stylesheet" type="text/css" href="css/forth.css">
+</head>
+
+<body>
+  <h1>Application header...</h1>
+
+  <section id="main">
+    <section id="repl">
+      <section id="output"></section>
+      <section>
+        <textarea id="input" autofocus="true" , cols="80" rows="20" onkeyup="repl(event)"></textarea>
+      </section>
+    </section>
+
+</body>
+
+<script>
+  // You can also require other files to run in this process
+  require('./dist-js/renderer/renderer.js')
+</script>
+
+</html>

@@ -1,28 +1,28 @@
 {
-  "name": "electron-forth",
+  "name": "electron-ts-template",
   "version": "0.0.1",
-  "license": "BSD3",
-  "description": "Electron JS version of Forth",
-  "homepage": "https://github.com/roycrippen/electron-forth",
+  "description": "A minimal Electron application written with Typescript",
   "author": {
     "name": "Roy Crippen",
     "email": "roycrippen@gmail.com"
   },
+  "repository": "https://github.com/roycrippen/electron-ts-template.git",
+  "keywords": [
+    "Electron",
+    "typescript"
+  ],
+  "license": "BSD-3-Clause",
   "scripts": {
-    "dev": "electron-webpack dev",
-    "h": "electron-webpack --help",
-    "compile": "electron-webpack",
-    "dist": "yarn compile && electron-builder"
-  },
-  "dependencies": {
-    "source-map-support": "^0.5.10"
+    "build": "tsc --pretty",
+    "watch": "tsc -w",
+    "lint": "tslint -c tslint.json -p tsconfig.json",
+    "start": "npm run build && electron ./dist-js/main/main.js",
+    "debug": "npm run build && electron --inspect ./dist-js/main/main.js",
+    "dist": "tsc"
   },
   "devDependencies": {
-    "electron": "4.0.1",
-    "electron-builder": "20.38.4",
-    "electron-webpack": "^2.6.2",
-    "electron-webpack-ts": "^3.2.0",
-    "typescript": "^3.5.1",
-    "webpack": "4.28.4"
+    "electron": "^4.2.4",
+    "tslint": "^5.17.0",
+    "typescript": "^3.5.1"
   }
 }

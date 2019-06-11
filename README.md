@@ -1,30 +1,19 @@
-# electron-webpack-quick-start-roy
-> A fork of [`jsForth`](https://github.com/brendanator/jsForth) ported to [`Electron`](https://electronjs.org/) and  [`TypeScript`](https://www.typescriptlang.org/).
+# electron-ts-template
 
-## Quick Start
-The use of the [yarn](https://yarnpkg.com/) package manager is **strongly** recommended, as opposed to using `npm`.
+A basic [Electron](https://electronjs.org) TypeScript template.
 
-```bash
-git clone https://github.com/roycrippen/electron-forth.git
-cd electron-forth
-rm -rf .git
+### Quick Start
+
+```
+# clone the repository
+git clone https://github.com/roycrippen/electron-ts-template.git
 
 # install dependencies
-yarn
+$ npm install
+
+# start application in development mode
+$ npm run start 
+
+# build distribution release
+$ npm run dist
 ```
-
-## Development Scripts
-
-```bash
-# run application in development mode
-yarn dev
-
-# compile source code and create webpack output
-yarn compile
-
-# `yarn compile` & create AppImage build with electron-builder
-yarn dist
-```
-
-## Documentation
-Coming soon?
