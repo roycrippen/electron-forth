@@ -1,7 +1,13 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "target": "es2015",
+    "target": "es2017",
+    "module": "commonjs",
+    "lib": [
+      "es2017",
+      "dom",
+      "dom.iterable"
+    ],
     "moduleResolution": "node",
     "pretty": true,
     "newLine": "LF",
@@ -16,6 +22,6 @@
   },
   "exclude": [
     "node_modules",
-    "src/renderer"
+    "src/main"
   ]
 }

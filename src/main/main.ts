@@ -60,6 +60,6 @@ app.on("activate", (): void => {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 ipcMain.on("pong", (_: Event, msg: string): void => {
-    // tslint:disable-next-line: no-console
+    // eslint-disable-next-line no-console
     console.log(msg);
 });
