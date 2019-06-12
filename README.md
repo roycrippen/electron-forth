@@ -9,7 +9,7 @@ From a fork of [jsForth](https://github.com/brendanator/jsForth).
 
 ```
 # clone the repository
-git clone https://github.com/roycrippen/electron-ts-template.git
+git clone https://github.com/roycrippen/electron-forth.git
 
 # goto directory
 cd electron-ts-template

@@ -1,9 +1,7 @@
 {
-  "name": "electron-forth",
+  "name": "electron-ts-template",
   "version": "0.0.1",
-  "license": "BSD3",
-  "description": "Electron JS version of Forth",
-  "homepage": "https://github.com/roycrippen/electron-forth",
+  "description": "A minimal Electron application written with Typescript",
   "author": {
     "name": "Roy Crippen",
     "email": "roycrippen@gmail.com"
