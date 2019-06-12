@@ -3,11 +3,10 @@
 // All of the Node.js APIs are available in this process.
 
 import { ipcRenderer } from "electron";
-import { double } from "./util";
 
 ipcRenderer.on("ping", (_: Event, msg: string) => {
   console.log(msg);
-  ipcRenderer.send("pong", "pong message! " + double(100).toString());
+  ipcRenderer.send("pong", "pong message!");
 });
 
 const interpret = (event: any) => {
