@@ -1,4 +1,5 @@
-.DS_Store
-dist/
-node_modules/
-thumbs.db
+node_modules
+dist
+dist-js
+package-lock.json
+
