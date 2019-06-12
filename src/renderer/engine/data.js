@@ -1,6 +1,7 @@
-var Stack = require("./stack.js");
+// var Stack = require("./stack.js");
+import Stack from './stack';
 
-function Data(f) {
+function Data (f) {
     f.instructionPointer = 0;
     f.dataSpace = [];
     f.returnStack = new Stack("Return Stack");
@@ -9,4 +10,5 @@ function Data(f) {
     return f;
 }
 
-module.exports = Data;
+// module.exports = Data;
+export default Data;

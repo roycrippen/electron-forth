@@ -1,16 +1,24 @@
-var request = require("request");
-var url = require("url");
-var fs = require("fs");
-var InputExceptions = require("./input-exceptions.js");
+/* eslint-disable no-console */
 
-function Include(f) {
-    f.defjs("include", function() {
+import request from 'request'
+import url from 'url'
+import fs from 'fs'
+import InputExceptions from './input-exceptions'
+
+// var request = require("request");
+// var url = require("url");
+// var fs = require("fs");
+// var InputExceptions = require("./input-exceptions.js");
+
+
+function Include (f) {
+    f.defjs("include", function () {
         var outputCallback = f.outputCallback;
 
         var file = f._readWord();
         if (process.browser || file.match(/^http/)) {
             if (process.browser) file = url.resolve(location.href, file);
-            request.get(file, function(error, response, body) {
+            request.get(file, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     f.run(body, outputCallback, file.toString());
                 } else {
@@ -18,7 +26,7 @@ function Include(f) {
                 }
             });
         } else {
-            fs.readFile(file, "utf8", function(error, body) {
+            fs.readFile(file, "utf8", function (error, body) {
                 if (!error) {
                     f.run(body, outputCallback, file);
                 } else {
@@ -32,4 +40,5 @@ function Include(f) {
     return f;
 }
 
-module.exports = Include;
+// module.exports = Include;
+export default Include;

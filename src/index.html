@@ -15,10 +15,12 @@
     <section id="repl">
       <section id="output"></section>
       <section>
-        <textarea id="input" autofocus="true" , cols="80" rows="20" onkeyup="repl(event)"></textarea>
+        <textarea id="input" autofocus="true" , cols="80" rows="20" onkeyup="repl.interpret(event)"></textarea>
       </section>
     </section>
   </section>
+
+  <section id="stack"></section>
 
 </body>
 

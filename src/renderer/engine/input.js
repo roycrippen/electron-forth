@@ -1,10 +1,12 @@
-var InputExceptions = require("./input-exceptions.js");
+/* eslint-disable @typescript-eslint/no-use-before-define */
+// var InputExceptions = require("./input-exceptions.js");
+import InputExceptions from './input-exceptions.js'
 
-function InputWindow(input, startPosition, endPosition, toIn, sourceId) {
+function InputWindow (input, startPosition, endPosition, toIn, sourceId) {
     var inputBufferPosition = startPosition;
     var inputBufferLength = -1;
 
-    function refill() {
+    function refill () {
         inputBufferPosition += inputBufferLength + 1;
 
         inputBufferLength = input.substring(inputBufferPosition).search(/\n/);
@@ -15,7 +17,7 @@ function InputWindow(input, startPosition, endPosition, toIn, sourceId) {
         return inputBufferPosition < endPosition;
     }
 
-    function readKey() {
+    function readKey () {
         var keyPosition = inputBufferPosition + toIn();
         if (keyPosition < endPosition) {
             toIn(toIn() + 1);
@@ -25,34 +27,10 @@ function InputWindow(input, startPosition, endPosition, toIn, sourceId) {
         }
     }
 
-    function parse(delimiter, skipLeading) {
-        delimiter = delimiter || " ".charCodeAt(0);
-        var inputBuf = inputBuffer();
-
-        var startPosition = toIn();
-        if (skipLeading) {
-            while (inputBuf.charCodeAt(startPosition) === delimiter && startPosition < inputBuf.length) {
-                startPosition++;
-            }
-        }
-
-        var endPosition = startPosition;
-        while (inputBuf.charCodeAt(endPosition) !== delimiter && endPosition < inputBuf.length) {
-            endPosition++;
-        }
-
-        toIn(endPosition + 1);
-        var result = inputBuf.substring(startPosition, endPosition);
-        return [inputBufferPosition + startPosition, result.length, result];
-    }
-
-    function readWord(delimiter) {
-        return parse(delimiter, true)[2];
-    }
-
-    function sBackslashQuote() {
+    function sBackslashQuote () {
         var string = "";
 
+        // eslint-disable-next-line no-constant-condition
         while (true) {
             var char = readKey();
 
@@ -118,24 +96,50 @@ function InputWindow(input, startPosition, endPosition, toIn, sourceId) {
         return string;
     }
 
-    function source() {
+    function source () {
         return [inputBufferPosition, inputBufferLength];
     }
 
-    function inputBuffer() {
+    function inputBuffer () {
         if (inputBufferLength > 0)
             return input.substring(inputBufferPosition, inputBufferPosition + inputBufferLength);
         else
             return "";
     }
 
-    function subInput(position, length) {
+    function subInput (position, length) {
         return InputWindow(input, position, position + length, toIn, -1);
     }
 
-    function charCodeAt(index) {
+    function charCodeAt (index) {
         return input.charCodeAt(index);
     }
+
+    function parse (delimiter, skipLeading) {
+        delimiter = delimiter || " ".charCodeAt(0);
+        var inputBuf = inputBuffer();
+
+        var startPosition = toIn();
+        if (skipLeading) {
+            while (inputBuf.charCodeAt(startPosition) === delimiter && startPosition < inputBuf.length) {
+                startPosition++;
+            }
+        }
+
+        var endPosition = startPosition;
+        while (inputBuf.charCodeAt(endPosition) !== delimiter && endPosition < inputBuf.length) {
+            endPosition++;
+        }
+
+        toIn(endPosition + 1);
+        var result = inputBuf.substring(startPosition, endPosition);
+        return [inputBufferPosition + startPosition, result.length, result];
+    }
+
+    function readWord (delimiter) {
+        return parse(delimiter, true)[2];
+    }
+
 
     return {
         readWord: readWord,
@@ -151,7 +155,7 @@ function InputWindow(input, startPosition, endPosition, toIn, sourceId) {
     };
 }
 
-function Input(f) {
+function Input (f) {
     f._base = f.defvar("base", 10);
 
     // Input buffer pointer
@@ -160,43 +164,43 @@ function Input(f) {
     // Address offset to indicate input addresses
     var INPUT_SOURCE = 1 << 31;
 
-    f.defjs("source", function source() {
+    f.defjs("source", function source () {
         var positionLength = f._currentInput.source();
         f.stack.push(INPUT_SOURCE + positionLength[0]);
         f.stack.push(positionLength[1]);
     });
 
-    f.defjs("source-id", function sourceId() {
+    f.defjs("source-id", function sourceId () {
         f.stack.push(f._currentInput.sourceId);
     });
 
-    f.defjs("refill", function refill() {
+    f.defjs("refill", function refill () {
         f.stack.push(f._currentInput.refill());
     });
 
-    f.defjs("key", function key() {
+    f.defjs("key", function key () {
         f.stack.push(f._currentInput.readKey().charCodeAt(0));
     });
 
-    f.defjs("parse", function parse() {
+    f.defjs("parse", function parse () {
         var addressLength = f._currentInput.parse(f.stack.pop(), false);
         f.stack.push(INPUT_SOURCE + addressLength[0]);
         f.stack.push(addressLength[1]);
     });
 
-    f.defjs("parse-name", function parse() {
+    f.defjs("parse-name", function parse () {
         var addressLength = f._currentInput.parse(" ".charCodeAt(0), true);
         f.stack.push(INPUT_SOURCE + addressLength[0]);
         f.stack.push(addressLength[1]);
     });
 
-    function readWord(delimiter) {
+    function readWord (delimiter) {
         return f._currentInput.readWord(delimiter);
     }
 
     var wordBufferStart = f.dataSpace.length;
     f.dataSpace.length += 128;
-    f.defjs("word", function word() {
+    f.defjs("word", function word () {
         var delimiter = f.stack.pop();
         var word = readWord(delimiter);
         var length = Math.min(word.length, 127);
@@ -208,10 +212,10 @@ function Input(f) {
         f.stack.push(wordBufferStart);
     });
 
-    f.defjs("s\\\"", function sBackslashQuote() {
+    f.defjs("s\\\"", function sBackslashQuote () {
         var string = f._currentInput.sBackslashQuote();
         var stringAddress = f.dataSpace.length + 1;
-        f.dataSpace.push(function() {
+        f.dataSpace.push(function () {
             f.stack.push(stringAddress);
             f.stack.push(string.length);
 
@@ -224,16 +228,16 @@ function Input(f) {
         }
     }, true); // Immediate
 
-    f.defjs("char", function char() {
+    f.defjs("char", function char () {
         f.stack.push(readWord().charCodeAt(0));
     });
 
-    f.defjs("accept", function accept() {
+    f.defjs("accept", function accept () {
 
         var maxLength = f.stack.pop();
         var address = f.stack.pop();
 
-        f.currentInstruction = function acceptCallback() {
+        f.currentInstruction = function acceptCallback () {
             f._currentInput.refill();
             var received = f._currentInput.inputBuffer().substring(0, maxLength).split("\n")[0];
 
@@ -249,7 +253,7 @@ function Input(f) {
     });
 
     // returns NaN if any characters are invalid in base
-    function parseIntStrict(num, base) {
+    function parseIntStrict (num, base) {
         var int = 0;
         if (num[0] !== "-") { // Positive
             for (var i = 0; i < num.length; i++) {
@@ -267,7 +271,7 @@ function Input(f) {
     }
 
     // Parse a float in the current base
-    function _parseFloatInBase(string) {
+    function _parseFloatInBase (string) {
         var base;
         if (string[0] === "'" && string.length === 3 && string[2] == "'") { // 'a'
             return string.charCodeAt(1);
@@ -305,7 +309,7 @@ function Input(f) {
 
     var inputString = "";
 
-    function newInput(input, sourceId) {
+    function newInput (input, sourceId) {
         saveCurrentInput();
         var startPosition = inputString.length;
         inputString += input;
@@ -314,12 +318,12 @@ function Input(f) {
 
     var inputStack = [];
 
-    function subInput(position, length) {
+    function subInput (position, length) {
         saveCurrentInput();
         f._currentInput = f._currentInput.subInput(position, length);
     }
 
-    function saveCurrentInput() {
+    function saveCurrentInput () {
         if (f._currentInput) {
             inputStack.push({
                 input: f._currentInput,
@@ -329,7 +333,7 @@ function Input(f) {
         }
     }
 
-    function popInput() {
+    function popInput () {
         var savedInput = inputStack.pop();
         if (savedInput) {
             f._currentInput = savedInput.input;
@@ -341,7 +345,7 @@ function Input(f) {
         }
     }
 
-    f.defjs("save-input", function saveInput() {
+    f.defjs("save-input", function saveInput () {
         saveCurrentInput();
         for (var i = 0; i < inputStack.length; i++) {
             f.stack.push(inputStack[i]);
@@ -350,7 +354,7 @@ function Input(f) {
         inputStack.pop();
     });
 
-    f.defjs("restore-input", function restoreInput() {
+    f.defjs("restore-input", function restoreInput () {
         inputStack.length = 0;
 
         var length = f.stack.pop();
@@ -374,4 +378,5 @@ function Input(f) {
     return f;
 }
 
-module.exports = Input;
+// module.exports = Input;
+export default Input;

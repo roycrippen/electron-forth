@@ -1,7 +1,7 @@
-function Stack(name) {
+function Stack (name) {
     var data = [];
 
-    this.pop = function() {
+    this.pop = function () {
         if (data.length > 0)
             return data.pop();
         else {
@@ -9,11 +9,11 @@ function Stack(name) {
         }
     };
 
-    this.push = function(element) {
+    this.push = function (element) {
         data.push(element);
     };
 
-    this.peek = function(offset) {
+    this.peek = function (offset) {
         var index = data.length - (offset || 1);
         if (0 <= index && index < data.length)
             return data[index];
@@ -21,7 +21,7 @@ function Stack(name) {
             throw "Attempted to peek at invalid stack index " + index + ": " + name;
     };
 
-    this.roll = function(num) {
+    this.roll = function (num) {
         if (num === 0) return;
 
         var index = data.length - num - 1;
@@ -32,17 +32,18 @@ function Stack(name) {
             throw "Attempted to roll more elements than in stack " + num + ": " + name;
     };
 
-    this.length = function() {
+    this.length = function () {
         return data.length;
     };
 
-    this.clear = function() {
+    this.clear = function () {
         data.length = 0;
     };
 
-    this.toString = function() {
+    this.toString = function () {
         return data.toString();
     };
 }
 
-module.exports = Stack;
+// module.exports = Stack;
+export default Stack;

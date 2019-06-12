@@ -1,23 +1,22 @@
-// This file is required by the index.html file and will
-// be executed in the renderer process for that window.
-// All of the Node.js APIs are available in this process.
+/* eslint-disable no-console */
 
 import { ipcRenderer } from "electron";
+import Repl from './engine/repl'
 
-ipcRenderer.on("ping", (_: Event, msg: string) => {
-  console.log(msg);
-  ipcRenderer.send("pong", "pong message!");
+ipcRenderer.on("ping", (_: Event, msg: string): void => {
+    console.log(msg);
+    ipcRenderer.send("pong", "pong message!");
 });
 
-const interpret = (event: any) => {
-  if (event.key === " ") {
-    console.log("key code , Space");
-  } else if (event.key === "Enter" && !event.shiftKey) {
-    console.log("key code 13, Enter");
-  } else if (event.key === ";" && !event.shiftKey) {
-    console.log("key code 186, ';'");
-  }
-};
+// const interpret = (event: any): void => {
+//     if (event.key === " ") {
+//         console.log("key code , Space");
+//     } else if (event.key === "Enter" && !event.shiftKey) {
+//         console.log("key code 13, Enter");
+//     } else if (event.key === ";" && !event.shiftKey) {
+//         console.log("key code 186, ';'");
+//     }
+// };
 
 const _global = global as any;
-_global.repl = interpret;
+_global.repl = Repl();

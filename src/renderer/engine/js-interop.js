@@ -1,4 +1,4 @@
-function JsInterop(f) {
+function JsInterop (f) {
     // Interop
     //   - new with params          js .new{1}
     //   - global variable access   js /document
@@ -8,7 +8,7 @@ function JsInterop(f) {
     //   - method calling           js /document.getElementById{1}
     //
     // When compiling it should resolve global names immediately.
-    function jsNewCall(path) {
+    function jsNewCall (path) {
         var constructor = f.stack.pop();
         var argsCount = parseInt(path.match(/\{(\d*)\}/)[1] || 0);
         var args = [null]; // new replaces the first argument with this
@@ -16,10 +16,10 @@ function JsInterop(f) {
             args.push(f.stack.pop());
         }
         // Use new operator with any number of arguments
-        return new(Function.prototype.bind.apply(constructor, args))();
+        return new (Function.prototype.bind.apply(constructor, args))();
     }
 
-    function jsFunctionCall(path) {
+    function jsFunctionCall (path) {
         var argsCount = parseInt(path.match(/\{(\d*)\}/)[1] || 0);
         var obj = f.stack.pop();
         path = path.match(/[^\{]*/)[0];
@@ -37,7 +37,7 @@ function JsInterop(f) {
 
     var globl = (typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document) ? window : global;
 
-    function jsInterop(js) {
+    function jsInterop (js) {
         if (js.startsWith("/")) { // Add global to f.stack
             f.stack.push(globl);
         } else if (!js.startsWith(".")) {
@@ -61,11 +61,11 @@ function JsInterop(f) {
         }
     }
 
-    var JS = f.defjs("js", function js() {
+    var JS = f.defjs("js", function js () {
         jsInterop(f.stack.pop());
     });
 
-    f.defjs("js", function js() {
+    f.defjs("js", function js () {
         if (f.compiling()) {
             f.dataSpace.push(f._lit);
             f.dataSpace.push(f._readWord());
@@ -75,7 +75,7 @@ function JsInterop(f) {
         }
     }, true);
 
-    f.defjs(">js-string", function toJsString() {
+    f.defjs(">js-string", function toJsString () {
         var length = f.stack.pop();
         var address = f.stack.pop();
         var string = "";
@@ -88,4 +88,5 @@ function JsInterop(f) {
     return f;
 }
 
-module.exports = JsInterop;
+// module.exports = JsInterop;
+export default JsInterop;

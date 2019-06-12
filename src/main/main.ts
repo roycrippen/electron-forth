@@ -5,34 +5,34 @@ import * as path from "path";
 // let mainWindow: Electron.BrowserWindow | null;
 let mainWindow: BrowserWindow;
 
-function createWindow() {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({
-    height: 1000,
-    width: 2000,
-    title: "my window title",
-    webPreferences: {
-      nodeIntegration: true,
-    },
-  });
+function createWindow(): void {
+    // Create the browser window.
+    mainWindow = new BrowserWindow({
+        height: 1000,
+        width: 2000,
+        title: "my window title",
+        webPreferences: {
+            nodeIntegration: true,
+        },
+    });
 
-  // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, "../index.html"));
+    // and load the index.html of the app.
+    mainWindow.loadFile(path.join(__dirname, "../index.html"));
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools();
 
-  mainWindow.webContents.on("did-finish-load", () => {
-    mainWindow.webContents.send("ping", "ping message! aaa");
-  });
+    mainWindow.webContents.on("did-finish-load", (): void => {
+        mainWindow.webContents.send("ping", "ping message! aaa");
+    });
 
-  // Emitted when the window is closed.
-  mainWindow.on("closed", () => {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    // mainWindow = null;
-  });
+    // Emitted when the window is closed.
+    mainWindow.on("closed", (): void => {
+        // Dereference the window object, usually you would store windows
+        // in an array if your app supports multi windows, this is the time
+        // when you should delete the corresponding element.
+        // mainWindow = null;
+    });
 }
 
 // This method will be called when Electron has finished
@@ -41,25 +41,25 @@ function createWindow() {
 app.on("ready", createWindow);
 
 // Quit when all windows are closed.
-app.on("window-all-closed", () => {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
+app.on("window-all-closed", (): void => {
+    // On OS X it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q
+    if (process.platform !== "darwin") {
+        app.quit();
+    }
 });
 
-app.on("activate", () => {
-  // On OS X it"s common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow();
-  }
+app.on("activate", (): void => {
+    // On OS X it"s common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (mainWindow === null) {
+        createWindow();
+    }
 });
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
-ipcMain.on("pong", (_: Event, msg: string) => {
-  // tslint:disable-next-line: no-console
-  console.log(msg);
+ipcMain.on("pong", (_: Event, msg: string): void => {
+    // tslint:disable-next-line: no-console
+    console.log(msg);
 });

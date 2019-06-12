@@ -1,17 +1,19 @@
-var Data = require("./data.js");
-var Definitions = require("./definitions.js");
-var NumericOperations = require("./numeric-operations.js");
-var BooleanOperations = require("./boolean-operations.js");
-var StackOperations = require("./stack-operations.js");
-var MemoryOperations = require("./memory-operations.js");
-var ControlStructures = require("./control-structures.js");
-var JsInterop = require("./js-interop.js");
-var Input = require("./input.js");
-var Output = require("./output.js");
-var Include = require("./include.js");
-var Interpreter = require("./interpreter.js");
+/* eslint-disable @typescript-eslint/no-var-requires */
 
-function Forth() {
+import NumericOperations from './numeric-operations';
+import Output from './output';
+import Data from './data.js'
+import Definitions from './definitions.js'
+import BooleanOperations from './boolean-operations.js'
+import StackOperations from './stack-operations.js'
+import MemoryOperations from './memory-operations.js'
+import ControlStructures from './control-structures.js'
+import JsInterop from './js-interop.js'
+import Input from './input.js'
+import Include from './include.js'
+import Interpreter from './interpreter.js'
+
+function Forth () {
     var forth = {};
 
     Data(forth);
@@ -30,4 +32,5 @@ function Forth() {
     return forth;
 }
 
-module.exports = Forth;
+// module.exports = Forth;
+export default Forth

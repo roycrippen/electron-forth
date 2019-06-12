@@ -1,14 +1,15 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 var Long = require("long");
 
-function Output(f) {
+function Output (f) {
 
     f._output = "";
 
-    f.defjs("cr", function cr() {
+    f.defjs("cr", function cr () {
         f._output += "\n";
     });
 
-    f.defjs(".", function dot() {
+    f.defjs(".", function dot () {
         var value;
         var top = f.stack.pop();
 
@@ -22,7 +23,7 @@ function Output(f) {
         f._output += value + " ";
     });
 
-    f.defjs(".s", function dotS() {
+    f.defjs(".s", function dotS () {
         for (var i = 1; i <= f.stack.length(); i++) {
             var top = f.stack.peek(i);
             var value;
@@ -38,7 +39,7 @@ function Output(f) {
         }
     });
 
-    f.defjs(".r", function dotR() {
+    f.defjs(".r", function dotR () {
         var value;
         var width = f.stack.pop();
         var top = f.stack.pop();
@@ -56,7 +57,7 @@ function Output(f) {
         f._output += value + " ";
     });
 
-    f.defjs("emit", function emit() {
+    f.defjs("emit", function emit () {
         var value = f.stack.pop();
         if (typeof value === "number")
             f._output += String.fromCharCode(value);
@@ -64,7 +65,7 @@ function Output(f) {
             f._output += value;
     });
 
-    f.defjs("type", function type() {
+    f.defjs("type", function type () {
         var length = f.stack.pop();
         var address = f.stack.pop();
         for (var i = 0; i < length; i++) {
@@ -81,18 +82,18 @@ function Output(f) {
     var numericOutput = "";
     f.dataSpace.length += 128;
 
-    f.defjs("<#", function initialiseNumericOutput() {
+    f.defjs("<#", function initialiseNumericOutput () {
         numericOutput = "";
     });
 
-    f.defjs("hold", function hold() {
+    f.defjs("hold", function hold () {
         var value = f.stack.pop();
         if (typeof value === "number")
             value = String.fromCharCode(value);
         numericOutput += value;
     });
 
-    f.defjs("#>", function finishNumericOutput() {
+    f.defjs("#>", function finishNumericOutput () {
         f.stack.pop();
         f.stack.pop();
         for (var i = 0; i < numericOutput.length; i++) {
@@ -102,12 +103,12 @@ function Output(f) {
         f.stack.push(numericOutput.length);
     });
 
-    f.defjs("sign", function sign() {
+    f.defjs("sign", function sign () {
         if (f.stack.pop() < 0)
             numericOutput += "-";
     });
 
-    f.defjs("#", function writeNextNumericOutput() {
+    f.defjs("#", function writeNextNumericOutput () {
         var bigPart = f.stack.pop();
         var smallPart = f.stack.pop();
         var value = new Long(smallPart, bigPart, true);
@@ -120,7 +121,7 @@ function Output(f) {
         f.stack.push(value.bigPart);
     });
 
-    f.defjs("#S", function writeAllNumericOutput() {
+    f.defjs("#S", function writeAllNumericOutput () {
         var bigPart = f.stack.pop();
         var smallPart = f.stack.pop();
         var value = new Long(smallPart, bigPart, true);
@@ -139,7 +140,7 @@ function Output(f) {
         f.stack.push(0);
     });
 
-    f.defjs(">number", function toNumber() {
+    f.defjs(">number", function toNumber () {
         var base = Long.fromInt(f._base());
         var length = f.stack.pop();
         var address = f.stack.pop();
@@ -169,4 +170,5 @@ function Output(f) {
     return f;
 }
 
-module.exports = Output;
+// module.exports = Output;
+export default Output;

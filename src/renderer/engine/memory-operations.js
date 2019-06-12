@@ -1,5 +1,5 @@
-function MemoryOperations(f) {
-    function getAddress(address) {
+function MemoryOperations (f) {
+    function getAddress (address) {
         if (address < 0) {
             return f._currentInput.charCodeAt(address - f._INPUT_SOURCE);
         } else {
@@ -11,7 +11,7 @@ function MemoryOperations(f) {
         }
     }
 
-    function setAddress(address, value) {
+    function setAddress (address, value) {
         if (address < 0) {
             throw "Illegal attempt to change input";
         } else {
@@ -19,30 +19,30 @@ function MemoryOperations(f) {
         }
     }
 
-    f.defjs("!", function store() {
+    f.defjs("!", function store () {
         var address = f.stack.pop();
         var data = f.stack.pop();
         setAddress(address, data);
     });
 
-    f.defjs("@", function fetch() {
+    f.defjs("@", function fetch () {
         var address = f.stack.pop();
         f.stack.push(getAddress(address));
     });
 
-    f.defjs("+!", function addStore() {
+    f.defjs("+!", function addStore () {
         var address = f.stack.pop();
         var data = f.stack.pop();
         f.dataSpace[address] = f.dataSpace[address] + data;
     });
 
-    f.defjs("-!", function subtractStore() {
+    f.defjs("-!", function subtractStore () {
         var address = f.stack.pop();
         var data = f.stack.pop();
         f.dataSpace[address] = f.dataSpace[address] - data;
     });
 
-    f.defjs("here", function here() {
+    f.defjs("here", function here () {
         f.stack.push(f.dataSpace.length);
     });
 
@@ -51,4 +51,5 @@ function MemoryOperations(f) {
     return f;
 }
 
-module.exports = MemoryOperations;
+// module.exports = MemoryOperations;
+export default MemoryOperations;

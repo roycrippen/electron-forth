@@ -1,4 +1,4 @@
-function Header(link, name, immediate, hidden, executionToken) {
+function Header (link, name, immediate, hidden, executionToken) {
     this.link = link;
     this.name = name;
     this.immediate = immediate || false;
@@ -6,33 +6,33 @@ function Header(link, name, immediate, hidden, executionToken) {
     this.executionToken = executionToken;
 }
 
-function Definitions(f) {
+function Definitions (f) {
 
     // Temporary definition until latest is defined as a variable
-    var latest = function latest() {
+    var latest = function latest () {
         return null;
     };
 
-    function defheader(name, immediate, hidden) {
+    function defheader (name, immediate, hidden) {
         f.dataSpace.push(new Header(latest(), name, immediate, hidden, f.dataSpace.length + 1));
         latest(f.dataSpace.length - 1);
     }
 
-    f.defjs = function defjs(name, fn, immediate, displayName) {
+    f.defjs = function defjs (name, fn, immediate, displayName) {
         defheader(displayName || name, immediate);
         f.dataSpace.push(fn);
         return fn;
     };
 
-    f.defvar = function defvar(name, initial) {
+    f.defvar = function defvar (name, initial) {
         defheader(name);
         var varAddress = f.dataSpace.length + 1;
-        f.dataSpace.push(function variable() {
+        f.dataSpace.push(function variable () {
             f.stack.push(varAddress);
         });
         f.dataSpace.push(initial);
 
-        return function(value) {
+        return function (value) {
             if (value !== undefined)
                 f.dataSpace[varAddress] = value;
             else
@@ -43,7 +43,7 @@ function Definitions(f) {
     latest = f.defvar("latest", f.dataSpace.length); // Replace existing function definition
     f.compiling = f.defvar("state", 0);
 
-    f.compileEnter = function compileEnter(name) {
+    f.compileEnter = function compileEnter (name) {
         var instruction = f.dataSpace.length + 1;
 
         var enter;
@@ -56,7 +56,7 @@ function Definitions(f) {
             `);
         } catch (e) {
             // Failback for names that are invalid identifiers
-            enter = function enter() {
+            enter = function enter () {
                 f.returnStack.push(f.instructionPointer);
                 f.instructionPointer = instruction;
             };
@@ -66,7 +66,7 @@ function Definitions(f) {
         return enter;
     };
 
-    f.findDefinition = function findDefinition(word) {
+    f.findDefinition = function findDefinition (word) {
         var current = latest();
         while (current !== null) {
             var wordDefinition = f.dataSpace[current];
@@ -78,31 +78,31 @@ function Definitions(f) {
         return current;
     };
 
-    f.defjs(":", function colon() {
+    f.defjs(":", function colon () {
         var name = f._readWord();
         defheader(name, false, true);
         f.compileEnter(name);
         f.compiling(true);
     });
 
-    f.defjs(":noname", function noname() {
+    f.defjs(":noname", function noname () {
         defheader(null, false, true);
         f.stack.push(f.dataSpace.length);
         f.compileEnter("_noname_");
         f.compiling(true);
     });
 
-    var exit = f.defjs("exit", function exit() {
+    var exit = f.defjs("exit", function exit () {
         f.instructionPointer = f.returnStack.pop();
     });
 
-    f.defjs(";", function semicolon() {
+    f.defjs(";", function semicolon () {
         f.dataSpace.push(exit);
         f.dataSpace[latest()].hidden = false;
         f.compiling(false);
     }, true); // Immediate
 
-    f.defjs("find", function find() {
+    f.defjs("find", function find () {
         var input = f.stack.pop();
         var word = input;
         if (typeof input === "number") {
@@ -124,68 +124,68 @@ function Definitions(f) {
     });
 
     // Converts an execution token into the data field address
-    f.defjs(">body", function dataFieldAddress() {
+    f.defjs(">body", function dataFieldAddress () {
         f.stack.push(f.stack.pop() + 1);
     });
 
-    f.defjs("create", function create() {
+    f.defjs("create", function create () {
         defheader(f._readWord());
         var dataFieldAddress = f.dataSpace.length + 1;
-        f.dataSpace.push(function pushDataFieldAddress() {
+        f.dataSpace.push(function pushDataFieldAddress () {
             f.stack.push(dataFieldAddress);
         });
     });
 
-    f.defjs("allot", function allot() {
+    f.defjs("allot", function allot () {
         f.dataSpace.length += f.stack.pop();
     });
 
-    f.defjs(",", function comma() {
+    f.defjs(",", function comma () {
         f.dataSpace.push(f.stack.pop());
     });
 
-    f.defjs("compile,", function compileComma() {
+    f.defjs("compile,", function compileComma () {
         f.dataSpace.push(f.dataSpace[f.stack.pop()]);
     });
 
-    f.defjs("[", function lbrac() {
+    f.defjs("[", function lbrac () {
         f.compiling(false); // Immediate
     }, true); // Immediate
 
-    f.defjs("]", function rbrac() {
+    f.defjs("]", function rbrac () {
         f.compiling(true); // Compile
     });
 
-    f.defjs("immediate", function immediate() {
+    f.defjs("immediate", function immediate () {
         var wordDefinition = f.dataSpace[latest()];
         wordDefinition.immediate = true;
     });
 
-    f.defjs("hidden", function hidden() {
+    f.defjs("hidden", function hidden () {
         var wordDefinition = f.dataSpace[f.stack.pop()];
         wordDefinition.hidden = !wordDefinition.hidden;
     });
 
-    f.defjs("'", function tick() {
+    f.defjs("'", function tick () {
         f.stack.push(f.findDefinition(f._readWord()).executionToken);
     });
 
-    var _lit = f.defjs("lit", function lit() {
+    var _lit = f.defjs("lit", function lit () {
         f.stack.push(f.dataSpace[f.instructionPointer]);
         f.instructionPointer++;
     });
 
-    f.defjs("[']", function bracketTick() {
+    f.defjs("[']", function bracketTick () {
         f.dataSpace.push(f._lit);
         f.dataSpace.push(f.findDefinition(f._readWord()).executionToken);
     }, true);
 
-    f.defjs("marker", function marker() {
+    f.defjs("marker", function marker () {
         var savedLatest = latest();
         var savedLength = f.dataSpace.length;
 
         defheader(f._readWord());
-        f.dataSpace.push(function marker() {
+        f.dataSpace.push(function marker () {
             latest(savedLatest);
             f.dataSpace.length = savedLength;
         });
@@ -196,4 +196,5 @@ function Definitions(f) {
     return f;
 }
 
-module.exports = Definitions;
+// module.exports = Definitions;
+export default Definitions;
