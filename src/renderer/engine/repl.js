@@ -39,6 +39,28 @@ export function Repl () {
         inputHistory.push("");
     }
 
+    const writeOutput = (text) => {
+        let s = `${text.trim()}\n`
+        if (s.length > 1) {
+            const outputNode = document.getElementById("output")
+            outputNode.value += s
+            outputNode.scrollTop = outputNode.scrollHeight
+
+            const messageNode = document.getElementById("message")
+            messageNode.value += 'ok\n'
+            messageNode.scrollTop = messageNode.scrollHeight
+        }
+    }
+
+    const writeError = (text) => {
+        let s = `${text.trim()}\n`
+        if (s.length > 1) {
+            const errorNode = document.getElementById("message")
+            errorNode.value += s
+            errorNode.scrollTop = errorNode.scrollHeight
+        }
+    }
+
     function createReplNode (icon, text, className) {
         if (!text) return;
 
@@ -61,23 +83,16 @@ export function Repl () {
     }
 
     function showStack () {
-        var stack = forth.stack;
-        var stackNode = document.getElementById("stack");
-        // Clear stack
-        while (stackNode.firstChild) stackNode.removeChild(stackNode.firstChild);
-
-        for (var i = 1; i <= stack.length(); i++) {
-            var element = document.createElement("span");
-            element.className = "stack-element";
-            element.textContent = String(stack.peek(i));
-            stackNode.appendChild(element);
-        }
+        const stackStr = forth.stack.getStack().reverse().join('\n');
+        const stackNode = document.getElementById("stack");
+        stackNode.value = stackStr;
     }
 
     function onForthOutput (error, output) {
-        createReplNode("\u2190", output, "forth-output");
         if (error) {
-            createReplNode("X", error, "error");
+            writeError(error)
+        } else {
+            writeOutput(output)
         }
         showStack();
     }

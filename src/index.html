@@ -1,26 +1,69 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 
 <head>
   <meta charset="UTF-8">
-  <title>Title from index.html</title>
+  <title>Electron Forth</title>
   <link rel="stylesheet" type="text/css" href="../css/forth.css">
   <script src='../dist-js/ui-bundle.js' type="text/javascript"></script>
 </head>
 
 <body>
-  <h1>Application header...</h1>
+  <h3 align="center">Forth Execution Engine and Debugger</h3>
 
   <section id="main">
     <section id="repl">
       <section id="output"></section>
       <section>
-        <textarea id="input" autofocus="true" , cols="80" rows="20" onkeyup="repl.interpret(event)"></textarea>
+        <h6 align="left"></h6>
+        <textarea align="left" id="input" autofocus="true" , cols="80" rows="20"
+          onkeyup="repl.interpret(event)"></textarea>
       </section>
     </section>
   </section>
 
   <section id="stack"></section>
+
+</body>
+
+</html> -->
+
+<!Doctype html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Electron Forth</title>
+  <link rel="stylesheet" type="text/css" href="../css/forth1.css">
+  <script src='../dist-js/ui-bundle.js' type="text/javascript"></script>
+</head>
+
+<body>
+  <h3>Forth Execution Engine and Debugger</h3>
+  <div class="row-one">
+    <div class="col col-input">
+      <label for="input">Forth Commands</label>
+      <textarea id="input" rows=20 onkeyup="repl.interpret(event)">0 1 2 3 4 5 6 7 8 9 10 11 12</textarea>
+    </div>
+    <div class="col col-stack">
+      <label for="stack">Stack</label>
+      <textarea id="stack" rows=20 readonly></textarea>
+    </div>
+  </div>
+
+  <div class="row-two">
+    <div class="col col-output">
+      <label for="output">Output</label>
+      <textarea id="output" rows=10" readonly></textarea>
+    </div>
+    <div class="col col-message">
+      <label for="message">Message</label>
+      <textarea id="message" rows=10 readonly></textarea>
+    </div>
+  </div>
+
+  <!-- <section id="output"></section> -->
+
+  <!-- <section id="stack"></section> -->
 
 </body>
 

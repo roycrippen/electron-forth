@@ -43,6 +43,11 @@ function Stack (name) {
     this.toString = function () {
         return data.toString();
     };
+
+    this.getStack = () => {
+        const dataClone = [...data]
+        return dataClone
+    }
 }
 
 // module.exports = Stack;
