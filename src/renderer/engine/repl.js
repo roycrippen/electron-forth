@@ -102,6 +102,7 @@ export function Repl () {
     }
 
     function runforth () {
+        // todo: fails on first run load of include
         var inputNode = document.getElementById("input");
         var input = inputNode.value.trim();
         if (input) {

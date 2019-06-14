@@ -17,7 +17,9 @@ function Include (f) {
 
         var file = f._readWord();
         if (isIncluded(file)) {
-            console.log(`file: ${file} is already included, nothing done.`)
+            const msg = `${file} already included`
+            console.log(msg)
+            f.writeMessage('_', msg)
             return
         } else {
             if (process.browser || file.match(/^http/)) {
