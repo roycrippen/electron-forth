@@ -1,4 +1,8 @@
 function StackOperations (f) {
+    f.defjs("clearstack", function clearstack () {
+        f.stack.clear();
+    });
+
     f.defjs("drop", function drop () {
         f.stack.pop();
     });

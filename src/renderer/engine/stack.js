@@ -37,7 +37,7 @@ function Stack (name) {
     };
 
     this.clear = function () {
-        data.length = 0;
+        data = [];
     };
 
     this.toString = function () {

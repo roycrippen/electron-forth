@@ -24,6 +24,7 @@ function Output (f) {
     });
 
     f.defjs(".s", function dotS () {
+        f._output = `<${f.stack.length()}> `
         for (var i = 1; i <= f.stack.length(); i++) {
             var top = f.stack.peek(i);
             var value;
@@ -35,7 +36,7 @@ function Output (f) {
             else
                 value = top.toString(f._base()); // Output numbers in current base
 
-            f._output += value + "\n";
+            f._output += value + " ";
         }
     });
 

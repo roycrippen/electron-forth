@@ -5,12 +5,6 @@ import url from 'url'
 import fs from 'fs'
 import InputExceptions from './input-exceptions'
 
-// var request = require("request");
-// var url = require("url");
-// var fs = require("fs");
-// var InputExceptions = require("./input-exceptions.js");
-
-
 function Include (f) {
     f.defjs("include", function () {
         var outputCallback = f.outputCallback;
@@ -28,9 +22,12 @@ function Include (f) {
         } else {
             fs.readFile(file, "utf8", function (error, body) {
                 if (!error) {
+                    f.writeMessage('_', `loaded: ${file}`)
                     f.run(body, outputCallback, file);
                 } else {
-                    console.error("Failed to load file " + file + ". " + error);
+                    const err = `Failed to load file ${file}. ${error}`
+                    console.error(err)
+                    f.writeMessage('_', err)
                 }
             });
         }
