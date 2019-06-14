@@ -1,63 +1,60 @@
-html {
-    font-size: 62.5%;
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
-
 body {
-    font-size: 1.6rem;
+    display: flex;
+    flex-flow: column;
 }
-
-* {
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-  font-family: consolas;              
+h1 {
+    text-align: center;
 }
-
-#main {
-  /*display: inline;*/
-  max-width: 800px;
-  margin: 0 auto; 
-  position: relative;
+h3 {
+    text-align: center;
 }
-#repl {
-  position: absolute;
-  left: 0;
-  max-width: 600px;
-  height: 100vh;
-  max-height: 100vh;
+.row-one {
+    /* flex: 1; */
+    display: flex;
+    flex-flow: row-one;
 }
-.icon {
-  display: inline;
+.row-two {
+    /* flex: 1; */
+    margin-top: 10px;
+    display: flex;
+    flex-flow: row-two;
 }
-.user-output {
-  display: inline;
-  border: none;
-  resize: none;
-  background-color: #ccffff;
+.col {
+    display: flex;
+    flex-flow: column;
+    margin: 0px 3px;
 }
-.forth-output {
-  border: none;
-  resize: none;
-  background-color: #ccffcc;
+.col-input {
+    flex: 1;
 }
-.error {
-  /*display: block;*/
-  border: none;
-  resize: none;
-  color: red;
-  background-color: #ffeeee;
+.col-stack {
+    width: 30%;
+    max-width: 20rem;
+    min-width: 10rem
 }
-#output {
-  max-height: 70vh;
-  overflow-y: scroll;
+.col-output {
+    flex: 1;
 }
-#stack {
-  position: absolute;
-  left: 600px;
-  width: 200px;
-  max-height: 70vh;
-  overflow-y: scroll;
+.col-message {
+    width: 50%;
 }
-.stack-element {
-  display: block;
+label {
+    display: block;
+    padding-left: 2px;
+}
+textarea {
+    flex: 1;
+    display: block;
+    margin: 2px 0;
+    padding: 1px;
+    border: 1px solid;
+    resize: none;
+}
+#stack, #output, #message {
+    background-color: #d4dada;
 }
