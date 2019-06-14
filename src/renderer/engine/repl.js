@@ -105,10 +105,11 @@ export function Repl () {
         var inputNode = document.getElementById("input");
         var input = inputNode.value.trim();
         if (input) {
-            // updateHistory(input);
-            // createReplNode("\u2192", input, "user-output");
-            // inputNode.value = "";
-            forth.run(input, onForthOutput);
+            const xs = input.split('\n')
+            xs.forEach(element => {
+                forth.run(element, onForthOutput)
+            });
+            // forth.run(input, onForthOutput);
         }
     }
 
