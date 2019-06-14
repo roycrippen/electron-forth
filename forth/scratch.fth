@@ -1,11 +1,15 @@
-: square ( n -- n )
-    dup * 
-;
+\ testing file
+include forth/simple-lib.fth
 
-: quad ( n -- n )
-    square square 
-;
+2 
+dup square
+dup square
+dup square
+.s
 
-: say-roy ( -- )
-    s" roy" type
-;
+say-roy
+
+1 2 3 
+.s
+
+\ clearstack
