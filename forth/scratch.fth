@@ -1,7 +1,11 @@
 : square ( n -- n )
-  dup * 
+    dup * 
 ;
 
 : quad ( n -- n )
-  square square 
+    square square 
+;
+
+: say-roy ( -- )
+    s" roy" type
 ;
