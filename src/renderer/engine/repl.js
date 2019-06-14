@@ -7,80 +7,84 @@ import Forth from './forth'
 
 export function Repl () {
     var forth = Forth();
-    var inputHistory = [""];
-    var historyCount = 0;
-    var historySelection = 0;
+    // var inputHistory = [""];
+    // var historyCount = 0;
+    // var historySelection = 0;
 
-    function useHistory (selection) {
-        var inputNode = document.getElementById("input");
+    // function useHistory (selection) {
+    //     var inputNode = document.getElementById("input");
 
-        if (inputNode.value !== inputHistory[historySelection]) {
-            historySelection = historyCount - 1;
-            inputHistory[historyCount] = inputNode.value;
-        } else {
-            historySelection = Math.min(Math.max(selection, 0), inputHistory.length - 1);
-        }
+    //     if (inputNode.value !== inputHistory[historySelection]) {
+    //         historySelection = historyCount - 1;
+    //         inputHistory[historyCount] = inputNode.value;
+    //     } else {
+    //         historySelection = Math.min(Math.max(selection, 0), inputHistory.length - 1);
+    //     }
 
-        inputNode.value = inputHistory[historySelection];
-        inputNode.selectionStart = inputNode.value.length;
-    }
+    //     inputNode.value = inputHistory[historySelection];
+    //     inputNode.selectionStart = inputNode.value.length;
+    // }
 
-    function updateHistory (input) {
-        // Remove duplicates
-        for (var i = inputHistory.length - 1; i >= 0; i--) {
-            if (inputHistory[i] === input) {
-                inputHistory.splice(i, 1);
-                historyCount--;
-            }
-        }
-        inputHistory[historyCount] = input;
-        historyCount = inputHistory.length;
-        historySelection = inputHistory.length;
-        inputHistory.push("");
-    }
+    // function updateHistory (input) {
+    //     // Remove duplicates
+    //     for (var i = inputHistory.length - 1; i >= 0; i--) {
+    //         if (inputHistory[i] === input) {
+    //             inputHistory.splice(i, 1);
+    //             historyCount--;
+    //         }
+    //     }
+    //     inputHistory[historyCount] = input;
+    //     historyCount = inputHistory.length;
+    //     historySelection = inputHistory.length;
+    //     inputHistory.push("");
+    // }
 
-    const writeOutput = (text) => {
-        let s = `${text.trim()}\n`
-        if (s.length > 1) {
-            const outputNode = document.getElementById("output")
-            outputNode.value += s
-            outputNode.scrollTop = outputNode.scrollHeight
+    const writeMessage = (output, message) => {
+        if (output.trim() !== "") {
+            const outNode = document.getElementById("output")
+            outNode.value += `${output.trim()}\n`
+            outNode.scrollTop = outNode.scrollHeight
 
-            const messageNode = document.getElementById("message")
-            messageNode.value += 'ok\n'
-            messageNode.scrollTop = messageNode.scrollHeight
-        }
-    }
-
-    const writeError = (text) => {
-        let s = `${text.trim()}\n`
-        if (s.length > 1) {
-            const errorNode = document.getElementById("message")
-            errorNode.value += s
-            errorNode.scrollTop = errorNode.scrollHeight
+            const msgNode = document.getElementById("message")
+            msgNode.value += `${message.trim()}\n`
+            msgNode.scrollTop = msgNode.scrollHeight
         }
     }
 
-    function createReplNode (icon, text, className) {
-        if (!text) return;
-
-        var textNode = document.createElement("textarea");
-        textNode.className = className;
-        textNode.readOnly = true;
-        textNode.cols = 80;
-        textNode.value = icon + " " + text;
-
-        var replNode = document.createElement("div");
-        replNode.appendChild(textNode);
-
-        var outputNode = document.getElementById("output");
-        outputNode.appendChild(replNode);
-
-        setTimeout(function () {
-            textNode.style.height = textNode.scrollHeight + "px";
-            outputNode.scrollTop = outputNode.scrollHeight - outputNode.clientHeight;
-        }, 0);
+    const clearMessages = () => {
+        document.getElementById("output").value = ""
+        document.getElementById("message").value = ""
     }
+    // const writeOutput = (text) => {
+    //     let s = `${text.trim()}\n`
+    //     if (s.length > 1) {
+    //         const outputNode = document.getElementById("output")
+    //         outputNode.value += s
+    //         outputNode.scrollTop = outputNode.scrollHeight
+    //         writeMessage('ok\n')
+    //     }
+    // }
+
+    // function createReplNode (icon, text, className) {
+    //     if (!text) return;
+
+    //     var textNode = document.createElement("textarea");
+    //     textNode.className = className;
+    //     textNode.readOnly = true;
+    //     textNode.cols = 80;
+    //     textNode.value = icon + " " + text;
+
+    //     var replNode = document.createElement("div");
+    //     replNode.appendChild(textNode);
+
+    //     var outputNode = document.getElementById("output");
+    //     outputNode.appendChild(replNode);
+
+    //     setTimeout(function () {
+    //         textNode.style.height = textNode.scrollHeight + "px";
+    //         outputNode.scrollTop = outputNode.scrollHeight - outputNode.clientHeight;
+    //     }, 0);
+    // }
 
     function showStack () {
         const stackStr = forth.stack.getStack().reverse().join('\n');
@@ -90,9 +94,9 @@ export function Repl () {
 
     function onForthOutput (error, output) {
         if (error) {
-            writeError(error)
+            writeMessage('_', error)
         } else {
-            writeOutput(output)
+            writeMessage(output, 'ok')
         }
         showStack();
     }
@@ -101,9 +105,9 @@ export function Repl () {
         var inputNode = document.getElementById("input");
         var input = inputNode.value.trim();
         if (input) {
-            updateHistory(input);
-            createReplNode("\u2192", input, "user-output");
-            inputNode.value = "";
+            // updateHistory(input);
+            // createReplNode("\u2192", input, "user-output");
+            // inputNode.value = "";
             forth.run(input, onForthOutput);
         }
     }
@@ -119,20 +123,20 @@ export function Repl () {
         xmlhttp.send();
     }
 
-    loadForth("../forth/forth.fth");
+    loadForth("../forth/forth.fth")
+    forth.writeMessage = writeMessage
+    forth.clearMessages = clearMessages
 
     return {
         interpret: function (event) {
-            if (event.key === " ") {
-                console.log("key code , Space");
-            } else if (event.key === "Enter" && !event.shiftKey) {
-                console.log("key code 13, Enter");
-                runforth();
-            } else if (event.key === ";" && !event.shiftKey) {
-                console.log("key code 186, ';'");
+            if (event.key === "Enter" && event.ctrlKey) {
+                // console.log("run commands");
+                forth.stack.clear()
+                clearMessages()
+                runforth()
             }
         }
-    };
+    }
 }
 
 export default Repl;
