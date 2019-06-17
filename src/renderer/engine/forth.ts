@@ -18,7 +18,7 @@ class Forth {
         var forth = {};
 
         new Data(forth);
-        Definitions(forth);
+        new Definitions(forth);
         Input(forth);
         new NumericOperations(forth);
         BooleanOperations(forth);
