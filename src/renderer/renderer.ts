@@ -20,4 +20,4 @@ ipcRenderer.on("ping", (_: Event, msg: string): void => {
 // };
 
 const _global = global as any;
-_global.repl = Repl();
+_global.repl = new Repl();
