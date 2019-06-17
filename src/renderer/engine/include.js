@@ -13,9 +13,9 @@ function Include (f) {
     }
 
     f.defjs("include", function () {
-        var outputCallback = f.outputCallback;
+        let outputCallback = f.outputCallback;
 
-        var file = f._readWord();
+        let file = f._readWord();
         if (isIncluded(file)) {
             const msg = `${file} already included`
             console.log(msg)
