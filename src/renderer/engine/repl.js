@@ -6,7 +6,7 @@
 import Forth from './forth'
 
 export function Repl () {
-    var forth = Forth();
+    var forth = new Forth();
     // var inputHistory = [""];
     // var historyCount = 0;
     // var historySelection = 0;
@@ -55,36 +55,6 @@ export function Repl () {
         document.getElementById("output").value = ""
         document.getElementById("message").value = ""
     }
-    // const writeOutput = (text) => {
-    //     let s = `${text.trim()}\n`
-    //     if (s.length > 1) {
-    //         const outputNode = document.getElementById("output")
-    //         outputNode.value += s
-    //         outputNode.scrollTop = outputNode.scrollHeight
-    //         writeMessage('ok\n')
-    //     }
-    // }
-
-    // function createReplNode (icon, text, className) {
-    //     if (!text) return;
-
-    //     var textNode = document.createElement("textarea");
-    //     textNode.className = className;
-    //     textNode.readOnly = true;
-    //     textNode.cols = 80;
-    //     textNode.value = icon + " " + text;
-
-    //     var replNode = document.createElement("div");
-    //     replNode.appendChild(textNode);
-
-    //     var outputNode = document.getElementById("output");
-    //     outputNode.appendChild(replNode);
-
-    //     setTimeout(function () {
-    //         textNode.style.height = textNode.scrollHeight + "px";
-    //         outputNode.scrollTop = outputNode.scrollHeight - outputNode.clientHeight;
-    //     }, 0);
-    // }
 
     function showStack () {
         const stackStr = forth.stack.getStack().reverse().join('\n');

@@ -2,7 +2,7 @@
 
 import NumericOperations from './numeric-operations';
 import Output from './output';
-import Data from './data.js'
+import Data from './data'
 import Definitions from './definitions.js'
 import BooleanOperations from './boolean-operations.js'
 import StackOperations from './stack-operations.js'
@@ -13,24 +13,25 @@ import Input from './input.js'
 import Include from './include.js'
 import Interpreter from './interpreter.js'
 
-function Forth () {
-    var forth = {};
+class Forth {
+    public constructor() {
+        var forth = {};
 
-    Data(forth);
-    Definitions(forth);
-    Input(forth);
-    NumericOperations(forth);
-    BooleanOperations(forth);
-    StackOperations(forth);
-    MemoryOperations(forth);
-    ControlStructures(forth);
-    Output(forth);
-    JsInterop(forth);
-    Include(forth);
-    Interpreter(forth);
+        new Data(forth);
+        Definitions(forth);
+        Input(forth);
+        NumericOperations(forth);
+        BooleanOperations(forth);
+        StackOperations(forth);
+        MemoryOperations(forth);
+        ControlStructures(forth);
+        Output(forth);
+        JsInterop(forth);
+        Include(forth);
+        Interpreter(forth);
 
-    return forth;
+        return forth;
+    }
 }
-
 // module.exports = Forth;
 export default Forth

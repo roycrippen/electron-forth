@@ -19,9 +19,5 @@
     "skipLibCheck": true,
     "allowJs": true,
     "jsx": "preserve"
-  },
-  "exclude": [
-    "node_modules",
-    "src/main"
-  ]
+  }
 }
