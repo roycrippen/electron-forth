@@ -23,7 +23,7 @@ class Forth {
         NumericOperations(forth);
         BooleanOperations(forth);
         StackOperations(forth);
-        MemoryOperations(forth);
+        new MemoryOperations(forth);
         ControlStructures(forth);
         Output(forth);
         JsInterop(forth);
