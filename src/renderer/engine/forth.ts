@@ -15,7 +15,7 @@ import Interpreter from './interpreter'
 
 class Forth {
     public constructor() {
-        var forth = {};
+        let forth = {};
 
         new Data(forth);
         new Definitions(forth);
@@ -25,7 +25,7 @@ class Forth {
         StackOperations(forth);
         new MemoryOperations(forth);
         ControlStructures(forth);
-        Output(forth);
+        new Output(forth);
         JsInterop(forth);
         Include(forth);
         Interpreter(forth);
