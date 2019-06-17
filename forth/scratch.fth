@@ -14,3 +14,4 @@ say-roy
 
 \ clearstack
 
+1 2 + dup .

@@ -7,8 +7,6 @@ class Data {
         f.dataSpace = [];
         f.returnStack = new Stack("Return Stack");
         f.stack = new Stack("Stack");
-
-        return f;
     }
 }
 
