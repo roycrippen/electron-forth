@@ -20,7 +20,7 @@ class Forth {
         new Data(forth);
         Definitions(forth);
         Input(forth);
-        NumericOperations(forth);
+        new NumericOperations(forth);
         BooleanOperations(forth);
         StackOperations(forth);
         new MemoryOperations(forth);

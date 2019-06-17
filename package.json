@@ -24,7 +24,8 @@
     "dist": "npm run build && electron-builder"
   },
   "dependencies": {
-    "long": "^3.0.3",
+    "@types/long": "^4.0.0",
+    "long": "^4.0.0",
     "request": "^2.69.0"
   },
   "devDependencies": {

@@ -50,7 +50,6 @@ class MemoryOperations {
 
         f._getAddress = getAddress;
         f._setAddress = setAddress;
-        return f;
     }
 }
 // module.exports = MemoryOperations;
