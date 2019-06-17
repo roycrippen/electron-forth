@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 class MemoryOperations {
     public constructor(f: any) {
-        function getAddress(address: number): any{
+        const getAddress = (address: number): any => {
             if (address < 0) {
                 return f._currentInput.charCodeAt(address - f._INPUT_SOURCE);
             } else {
@@ -12,9 +12,7 @@ class MemoryOperations {
                     return value;
             }
         }
-
-        //value: any can anything that can go in dataspace (likely char or )
-        function setAddress(address: number, value: any): void {
+        const setAddress = (address: number, value: any): void => {
             if (address < 0) {
                 throw "Illegal attempt to change input";
             } else {
