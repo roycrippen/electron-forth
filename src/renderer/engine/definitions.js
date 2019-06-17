@@ -1,10 +1,4 @@
-function Header (link, name, immediate, hidden, executionToken) {
-    this.link = link;
-    this.name = name;
-    this.immediate = immediate || false;
-    this.hidden = hidden || false;
-    this.executionToken = executionToken;
-}
+import { Header } from "./Header";
 
 function Definitions (f) {
 
