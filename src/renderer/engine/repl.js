@@ -103,7 +103,6 @@ class Repl {
         return {
             interpret: function (event) {
                 if (event.key === "Enter" && event.ctrlKey) {
-                    // console.log("run commands");
                     forth.stack.clear()
                     clearMessages()
                     forth._currentInput = null
