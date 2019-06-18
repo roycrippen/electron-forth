@@ -47,7 +47,7 @@ function Include (f) {
             }
             throw InputExceptions.WaitingOnInput;
         }
-    });
+    }, true);
 
     return f;
 }
