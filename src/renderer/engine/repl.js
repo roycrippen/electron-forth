@@ -8,37 +8,6 @@ import Forth from './forth'
 class Repl {
     constructor() {
         let forth = new Forth();
-        // var inputHistory = [""];
-        // var historyCount = 0;
-        // var historySelection = 0;
-
-        // function useHistory (selection) {
-        //     var inputNode = document.getElementById("input");
-
-        //     if (inputNode.value !== inputHistory[historySelection]) {
-        //         historySelection = historyCount - 1;
-        //         inputHistory[historyCount] = inputNode.value;
-        //     } else {
-        //         historySelection = Math.min(Math.max(selection, 0), inputHistory.length - 1);
-        //     }
-
-        //     inputNode.value = inputHistory[historySelection];
-        //     inputNode.selectionStart = inputNode.value.length;
-        // }
-
-        // function updateHistory (input) {
-        //     // Remove duplicates
-        //     for (var i = inputHistory.length - 1; i >= 0; i--) {
-        //         if (inputHistory[i] === input) {
-        //             inputHistory.splice(i, 1);
-        //             historyCount--;
-        //         }
-        //     }
-        //     inputHistory[historyCount] = input;
-        //     historyCount = inputHistory.length;
-        //     historySelection = inputHistory.length;
-        //     inputHistory.push("");
-        // }
 
         const writeMessage = (output, message) => {
             if (output.trim() !== "") {

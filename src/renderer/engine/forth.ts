@@ -18,14 +18,14 @@ class Forth {
     public dataSpace: [] = [];
     public returnStack: Stack = new Stack("Return Stack");
     public stack: Stack = new Stack("Stack");
-    
+
     public constructor() {
         // this will let us use end around dictionary and 
         // have properties persist because returning 
         let forth = Object.assign({}, this);
 
         new Definitions(forth);
-        Input(forth);
+        new Input(forth);
         new NumericOperations(forth);
         new BooleanOperations(forth);
         new StackOperations(forth);
@@ -34,7 +34,7 @@ class Forth {
         new Output(forth);
         new JsInterop(forth);
         new Include(forth);
-        Interpreter(forth);
+        new Interpreter(forth);
 
         return forth;
     }

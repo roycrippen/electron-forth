@@ -1,0 +1,89 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-console */
+
+import Forth from './forth'
+
+class Repl {
+    public forth: any = new Forth();
+    public constructor() {
+
+        const writeMessage = (output: string, message: string): void => {
+            if (output.trim() !== "") {
+                const outNode = document.getElementById("output") as HTMLTextAreaElement
+                outNode.value += `${output.trim()}\n`
+                outNode.scrollTop = outNode.scrollHeight
+
+                const msgNode = document.getElementById("message") as HTMLTextAreaElement
+                msgNode.value += `${message.trim()}\n`
+                msgNode.scrollTop = msgNode.scrollHeight
+            }
+        }
+
+        const clearMessages = (): void => {
+            const outNode = document.getElementById("output") as HTMLTextAreaElement
+            outNode.value = ""
+
+            const msgNode = document.getElementById("message") as HTMLTextAreaElement
+            msgNode.value = ""
+        }
+
+        const showStack = (): void => {
+            const stackStr = this.forth.stack.getStack().reverse().join('\n')
+            const stackNode = document.getElementById("stack") as HTMLTextAreaElement
+            stackNode.value = stackStr;
+        }
+
+        const onForthOutput = (error: string, output: string): void => {
+            if (output == "") {
+                return
+            }
+            if (error) {
+                writeMessage('_', error)
+            } else {
+                writeMessage(output, 'ok')
+            }
+            showStack();
+        }
+
+        const runforth = (): void => {
+            let inputNode = document.getElementById("input") as HTMLTextAreaElement
+            let input = inputNode.value.trim();
+            if (input) {
+                const xs = input.split('\n')
+                xs.forEach((element: string): void => {
+                    this.forth.run(`${element}\n`, onForthOutput)
+                });
+            }
+        }
+
+        const loadForth = (file: string, repl: Repl): void => {
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function (): void {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    repl.forth.run(xmlhttp.responseText, onForthOutput);
+                }
+            };
+            xmlhttp.open("GET", file, true);
+            xmlhttp.send();
+        }
+
+
+        this.forth.writeMessage = writeMessage
+        this.forth.clearMessages = clearMessages
+        this.forth.runforth = runforth
+        loadForth("../forth/forth.fth", this)
+
+    }
+
+    public interpret = (event: KeyboardEvent): void => {
+        if (event.key === "Enter" && event.ctrlKey) {
+            this.forth.stack.clear()
+            this.forth.clearMessages()
+            this.forth._currentInput = null
+            this.forth.runforth()
+        }
+    }
+
+}
+
+export default Repl;
