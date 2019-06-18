@@ -26,7 +26,7 @@ class Forth {
         new MemoryOperations(forth);
         ControlStructures(forth);
         new Output(forth);
-        JsInterop(forth);
+        new JsInterop(forth);
         Include(forth);
         Interpreter(forth);
 
