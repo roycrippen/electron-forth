@@ -21,8 +21,8 @@ class Forth {
         new Definitions(forth);
         Input(forth);
         new NumericOperations(forth);
-        BooleanOperations(forth);
-        StackOperations(forth);
+        new BooleanOperations(forth);
+        new StackOperations(forth);
         new MemoryOperations(forth);
         ControlStructures(forth);
         new Output(forth);
