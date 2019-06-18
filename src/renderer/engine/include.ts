@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 
-import request from 'request'
-import url from 'url'
+// import request from 'request'
+// import url from 'url'
 import fs from 'fs'
 import InputExceptions from './input-exceptions'
 
@@ -25,27 +25,23 @@ class Include {
                 return
             } else {
                 if ((process as any).browser || file.match(/^http/)) {
-                    if ((process as any).browser) file = url.resolve(location.href, file);
-                    request.get(file, function (error: string, response: any, body: string): void {
-                        if (!error && response.statusCode == 200) {
-                            includes.push(file)
-                            f.run(body, outputCallback, file.toString());
-                        } else {
-                            console.error("Failed to load http file " + file + ". " + error);
-                        }
-                    });
+                    const err = "Failed to load http file " + file +
+                        ". This functionality has been removed";
+                    console.error(err);
+                    f.writeMessage('_', err)
                 } else {
-                    fs.readFile(file, "utf8", function (error: any, body: string): void {
-                        if (!error) {
-                            f.writeMessage('_', `loaded: ${file}`)
-                            includes.push(file)
-                            f.run(body, outputCallback, file);
-                        } else {
-                            const err = `Failed to load file ${file}. ${error}`
-                            console.error(err)
-                            f.writeMessage('_', err)
-                        }
-                    });
+                    try {
+
+                        let body = fs.readFileSync(file, 'utf8');
+                        f.writeMessage('_', `loaded: ${file}`)
+                        includes.push(file)
+                        f.run(body, outputCallback, file);
+
+                    } catch (error) {
+                        const err = `Failed to load file ${file}. ${error}`
+                        console.error(err)
+                        f.writeMessage('_', err)
+                    }
                 }
                 throw InputExceptions.WaitingOnInput;
             }
