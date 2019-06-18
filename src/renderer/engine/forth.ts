@@ -27,7 +27,7 @@ class Forth {
         ControlStructures(forth);
         new Output(forth);
         new JsInterop(forth);
-        Include(forth);
+        new Include(forth);
         Interpreter(forth);
 
         return forth;
