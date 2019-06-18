@@ -52,8 +52,6 @@ class Include {
         }
 
         f.defjs("include", include, true);
-
-        return f;
     }
 }
 // module.exports = Include;
