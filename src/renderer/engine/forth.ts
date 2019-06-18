@@ -24,7 +24,7 @@ class Forth {
         new BooleanOperations(forth);
         new StackOperations(forth);
         new MemoryOperations(forth);
-        ControlStructures(forth);
+        new ControlStructures(forth);
         new Output(forth);
         new JsInterop(forth);
         new Include(forth);
@@ -33,5 +33,5 @@ class Forth {
         return forth;
     }
 }
-// module.exports = Forth;
+
 export default Forth
