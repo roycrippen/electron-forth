@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export class Header {
+class Header {
     public constructor(link: any, name: string | null, immediate: boolean, hidden: boolean, executionToken: string) {
         this.link = link
         this.name = name
@@ -13,3 +13,5 @@ export class Header {
     public hidden: boolean
     public executionToken: string
 }
+
+export default Header

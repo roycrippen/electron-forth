@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Header } from "./Header";
+import Header from "./Header";
 
 class Definitions {
     public constructor(f: any) {
