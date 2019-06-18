@@ -79,7 +79,7 @@ class Repl {
             if (input) {
                 const xs = input.split('\n')
                 xs.forEach(element => {
-                    forth.run(element, onForthOutput)
+                    forth.run(`${element}\n`, onForthOutput)
                 });
                 // forth.run(input, onForthOutput);
             }
@@ -106,6 +106,7 @@ class Repl {
                     // console.log("run commands");
                     forth.stack.clear()
                     clearMessages()
+                    forth._currentInput = null
                     runforth()
                 }
             }
