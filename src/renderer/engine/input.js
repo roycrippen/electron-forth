@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 // var InputExceptions = require("./input-exceptions.js");
-import InputExceptions from './input-exceptions.js'
+import InputExceptions from './input-exceptions'
 
 function InputWindow (input, startPosition, endPosition, toIn, sourceId) {
-    var inputBufferPosition = startPosition;
-    var inputBufferLength = -1;
+    let inputBufferPosition = startPosition;
+    let inputBufferLength = -1;
 
     function refill () {
         inputBufferPosition += inputBufferLength + 1;
@@ -18,7 +18,7 @@ function InputWindow (input, startPosition, endPosition, toIn, sourceId) {
     }
 
     function readKey () {
-        var keyPosition = inputBufferPosition + toIn();
+        let keyPosition = inputBufferPosition + toIn();
         if (keyPosition < endPosition) {
             toIn(toIn() + 1);
             return input.charAt(keyPosition);
@@ -28,16 +28,16 @@ function InputWindow (input, startPosition, endPosition, toIn, sourceId) {
     }
 
     function sBackslashQuote () {
-        var string = "";
+        let string = "";
 
         // eslint-disable-next-line no-constant-condition
         while (true) {
-            var char = readKey();
+            let char = readKey();
 
             if (char === "\"") {
                 break;
             } else if (char === "\\") {
-                var nextChar = readKey();
+                let nextChar = readKey();
                 switch (nextChar) {
                     case "a":
                         string += String.fromCharCode(7);
@@ -117,22 +117,22 @@ function InputWindow (input, startPosition, endPosition, toIn, sourceId) {
 
     function parse (delimiter, skipLeading) {
         delimiter = delimiter || " ".charCodeAt(0);
-        var inputBuf = inputBuffer();
+        let inputBuf = inputBuffer();
 
-        var startPosition = toIn();
+        let startPosition = toIn();
         if (skipLeading) {
             while (inputBuf.charCodeAt(startPosition) === delimiter && startPosition < inputBuf.length) {
                 startPosition++;
             }
         }
 
-        var endPosition = startPosition;
+        let endPosition = startPosition;
         while (inputBuf.charCodeAt(endPosition) !== delimiter && endPosition < inputBuf.length) {
             endPosition++;
         }
 
         toIn(endPosition + 1);
-        var result = inputBuf.substring(startPosition, endPosition);
+        let result = inputBuf.substring(startPosition, endPosition);
         return [inputBufferPosition + startPosition, result.length, result];
     }
 
@@ -159,13 +159,13 @@ function Input (f) {
     f._base = f.defvar("base", 10);
 
     // Input buffer pointer
-    var toIn = f.defvar(">in", 0);
+    let toIn = f.defvar(">in", 0);
 
     // Address offset to indicate input addresses
-    var INPUT_SOURCE = 1 << 31;
+    let INPUT_SOURCE = 1 << 31;
 
     f.defjs("source", function source () {
-        var positionLength = f._currentInput.source();
+        let positionLength = f._currentInput.source();
         f.stack.push(INPUT_SOURCE + positionLength[0]);
         f.stack.push(positionLength[1]);
     });
@@ -183,13 +183,13 @@ function Input (f) {
     });
 
     f.defjs("parse", function parse () {
-        var addressLength = f._currentInput.parse(f.stack.pop(), false);
+        let addressLength = f._currentInput.parse(f.stack.pop(), false);
         f.stack.push(INPUT_SOURCE + addressLength[0]);
         f.stack.push(addressLength[1]);
     });
 
     f.defjs("parse-name", function parse () {
-        var addressLength = f._currentInput.parse(" ".charCodeAt(0), true);
+        let addressLength = f._currentInput.parse(" ".charCodeAt(0), true);
         f.stack.push(INPUT_SOURCE + addressLength[0]);
         f.stack.push(addressLength[1]);
     });
@@ -198,14 +198,14 @@ function Input (f) {
         return f._currentInput.readWord(delimiter);
     }
 
-    var wordBufferStart = f.dataSpace.length;
+    let wordBufferStart = f.dataSpace.length;
     f.dataSpace.length += 128;
     f.defjs("word", function word () {
-        var delimiter = f.stack.pop();
-        var word = readWord(delimiter);
-        var length = Math.min(word.length, 127);
+        let delimiter = f.stack.pop();
+        let word = readWord(delimiter);
+        let length = Math.min(word.length, 127);
         f.dataSpace[wordBufferStart] = length;
-        for (var i = 0; i < length; i++) {
+        for (let i = 0; i < length; i++) {
             f.dataSpace[wordBufferStart + i + 1] = word.charCodeAt(i);
         }
 
@@ -213,8 +213,8 @@ function Input (f) {
     });
 
     f.defjs("s\\\"", function sBackslashQuote () {
-        var string = f._currentInput.sBackslashQuote();
-        var stringAddress = f.dataSpace.length + 1;
+        let string = f._currentInput.sBackslashQuote();
+        let stringAddress = f.dataSpace.length + 1;
         f.dataSpace.push(function () {
             f.stack.push(stringAddress);
             f.stack.push(string.length);
@@ -223,7 +223,7 @@ function Input (f) {
             f.instructionPointer += string.length;
         });
 
-        for (var i = 0; i < string.length; i++) {
+        for (let i = 0; i < string.length; i++) {
             f.dataSpace.push(string[i]);
         }
     }, true); // Immediate
@@ -234,15 +234,15 @@ function Input (f) {
 
     f.defjs("accept", function accept () {
 
-        var maxLength = f.stack.pop();
-        var address = f.stack.pop();
+        let maxLength = f.stack.pop();
+        let address = f.stack.pop();
 
         f.currentInstruction = function acceptCallback () {
             f._currentInput.refill();
-            var received = f._currentInput.inputBuffer().substring(0, maxLength).split("\n")[0];
+            let received = f._currentInput.inputBuffer().substring(0, maxLength).split("\n")[0];
 
             f.stack.push(received.length);
-            for (var i = 0; i < received.length; i++) {
+            for (let i = 0; i < received.length; i++) {
                 f._setAddress(address + i, received[i]);
             }
 
@@ -254,15 +254,15 @@ function Input (f) {
 
     // returns NaN if any characters are invalid in base
     function parseIntStrict (num, base) {
-        var int = 0;
+        let int = 0;
         if (num[0] !== "-") { // Positive
-            for (var i = 0; i < num.length; i++) {
+            for (let i = 0; i < num.length; i++) {
                 int *= base;
                 int += parseInt(num[i], base);
             }
             return int;
         } else {
-            for (var j = 1; j < num.length; j++) {
+            for (let j = 1; j < num.length; j++) {
                 int *= base;
                 int -= parseInt(num[j], base);
             }
@@ -272,7 +272,7 @@ function Input (f) {
 
     // Parse a float in the current base
     function _parseFloatInBase (string) {
-        var base;
+        let base;
         if (string[0] === "'" && string.length === 3 && string[2] == "'") { // 'a'
             return string.charCodeAt(1);
         } else if (string[0] === "#") { // decimal - #1234567890
@@ -288,14 +288,14 @@ function Input (f) {
             base = f._base();
         }
 
-        var num = string.split(/\./);
+        let num = string.split(/\./);
 
-        var integerPart = 0;
+        let integerPart = 0;
         if (num[0] !== '') {
             integerPart = parseIntStrict(num[0], base);
         }
 
-        var fractionalPart = 0;
+        let fractionalPart = 0;
         if (num.length > 1 && num[1] !== '') {
             fractionalPart = parseIntStrict(num[1], base) * Math.pow(base, -num[1].length);
         }
@@ -307,16 +307,16 @@ function Input (f) {
         }
     }
 
-    var inputString = "";
+    let inputString = "";
 
     function newInput (input, sourceId) {
         saveCurrentInput();
-        var startPosition = inputString.length;
+        let startPosition = inputString.length;
         inputString += input;
         f._currentInput = InputWindow(inputString, startPosition, inputString.length, toIn, sourceId);
     }
 
-    var inputStack = [];
+    let inputStack = [];
 
     function subInput (position, length) {
         saveCurrentInput();
@@ -334,7 +334,7 @@ function Input (f) {
     }
 
     function popInput () {
-        var savedInput = inputStack.pop();
+        let savedInput = inputStack.pop();
         if (savedInput) {
             f._currentInput = savedInput.input;
             toIn(savedInput.toIn);
@@ -347,7 +347,7 @@ function Input (f) {
 
     f.defjs("save-input", function saveInput () {
         saveCurrentInput();
-        for (var i = 0; i < inputStack.length; i++) {
+        for (let i = 0; i < inputStack.length; i++) {
             f.stack.push(inputStack[i]);
         }
         f.stack.push(inputStack.length);
@@ -357,12 +357,12 @@ function Input (f) {
     f.defjs("restore-input", function restoreInput () {
         inputStack.length = 0;
 
-        var length = f.stack.pop();
-        for (var i = length - 1; i >= 0; i--) {
+        let length = f.stack.pop();
+        for (let i = length - 1; i >= 0; i--) {
             inputStack[i] = f.stack.pop();
         }
 
-        var savedInput = inputStack.pop();
+        let savedInput = inputStack.pop();
         f._currentInput = savedInput.input;
         toIn(savedInput.toIn);
 

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 // var InputExceptions = require("./input-exceptions.js");
-import InputExceptions from './input-exceptions.js'
+import InputExceptions from './input-exceptions'
 
 function Interpreter (f) {
 
@@ -27,22 +27,22 @@ function Interpreter (f) {
     }
 
     function printStackTrace () {
-        var stackTrace = "    " + f.currentInstruction.name + " @ " + (f.instructionPointer - 1);
-        for (var i = f.returnStack.length - 1; i >= 0; i--) {
-            var instruction = f.returnStack[i];
+        let stackTrace = "    " + f.currentInstruction.name + " @ " + (f.instructionPointer - 1);
+        for (let i = f.returnStack.length - 1; i >= 0; i--) {
+            let instruction = f.returnStack[i];
             stackTrace += "\n    " + f.dataSpace[instruction - 1].name + " @ " + (instruction - 1);
         }
         return stackTrace;
     }
 
     function interpretWord () {
-        var word = f._readWord();
+        let word = f._readWord();
         while (!word) {
             if (!f._currentInput.refill()) throw InputExceptions.EndOfInput;
             word = f._readWord();
         }
 
-        var definition = f.findDefinition(word);
+        let definition = f.findDefinition(word);
         if (definition) {
             if (!f.compiling() || definition.immediate) {
                 f.dataSpace[definition.executionToken]();
@@ -51,7 +51,7 @@ function Interpreter (f) {
                 f.dataSpace.push(f.dataSpace[definition.executionToken]);
             }
         } else {
-            var num = f._parseFloatInBase(word);
+            let num = f._parseFloatInBase(word);
             if (isNaN(num)) throw "Word not defined: " + word;
             if (f.compiling()) {
                 f.dataSpace.push(f._lit);
@@ -62,21 +62,21 @@ function Interpreter (f) {
         }
     }
 
-    var interpretInstruction = f.dataSpace.length + 1;
+    let interpretInstruction = f.dataSpace.length + 1;
     f.defjs("interpret", function interpret () {
         f.instructionPointer = interpretInstruction; // Loop after interpret word is called
         interpretWord();
     });
 
     f._evaluate = f.defjs("evaluate", function evaluate () {
-        var length = f.stack.pop();
-        var address = f.stack.pop();
+        let length = f.stack.pop();
+        let address = f.stack.pop();
         if (address < 0) {
-            var position = address - f._INPUT_SOURCE;
+            let position = address - f._INPUT_SOURCE;
             f._subInput(position, length);
         } else {
-            var string = "";
-            for (var i = 0; i < length; i++) {
+            let string = "";
+            for (let i = 0; i < length; i++) {
                 string += String.fromCharCode(f._getAddress(address + i));
             }
             f._newInput(string, -1);
@@ -85,13 +85,13 @@ function Interpreter (f) {
         f.instructionPointer = interpretInstruction;
     });
 
-    var quit = f.defjs("quit", function quit () {
+    let quit = f.defjs("quit", function quit () {
         f.compiling(false); // Enter interpretation state
         f.returnStack.clear(); // Clear return stack
         f.instructionPointer = interpretInstruction; // Run the interpreter
     });
 
-    var abort = f.defjs("abort", function abort (error) {
+    let abort = f.defjs("abort", function abort (error) {
         f.stack.clear();
         throw error || "";
     });
@@ -120,7 +120,7 @@ function Interpreter (f) {
     }
 
     f.defjs('abort"', function abortQuote () {
-        var error = f._currentInput.parse('"'.charCodeAt(0))[2];
+        let error = f._currentInput.parse('"'.charCodeAt(0))[2];
         f.dataSpace.push(function abortQuote () {
             if (f.stack.pop())
                 abort(error);
