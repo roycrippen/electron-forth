@@ -14,6 +14,12 @@ import Interpreter from './interpreter'
 import Stack from './stack';
 
 class Forth {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    //placholder as we move this behavior into proper classes
+    public run(inst: string, callback: ForthOutputCallback): void {
+        inst;
+        callback;
+    }
     public instructionPointer: number = 0;
     public dataSpace: [] = [];
     public returnStack: Stack = new Stack("Return Stack");
