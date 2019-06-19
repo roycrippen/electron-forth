@@ -35,13 +35,13 @@ class Stack {
         else
             throw "Attempted to roll more elements than in stack " + num + ": " + this.stackName
     }
-    public length(): void {
+    public length(): number {
         return this.data.length
     }
     public clear(): void {
         this.data = []
     }
-    public toString(): void {
+    public toString(): string {
         return this.data.toString()
     }
     public getStack(): any[] {
