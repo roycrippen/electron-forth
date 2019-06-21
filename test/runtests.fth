@@ -6,29 +6,16 @@
 
 CR .( Running ANS Forth and Forth 2012 test programs, version 0.13) CR
 
-\ include https://raw.githubusercontent.com/gerryjackson/forth2012-test-suite/master/src/prelimtest.fth
-\ include https://raw.githubusercontent.com/gerryjackson/forth2012-test-suite/master/src/tester.fr
-\ include https://raw.githubusercontent.com/gerryjackson/forth2012-test-suite/master/src/ttester.fs
-include test/verbose-tester.fth
-
 \ Dummy implementation so accept test runs in batch
 : accept drop 0 swap ! 0 ;
 
-include ./test/fth_tests/coreplustest.fth
-include ./test/fth_tests/utilities.fth
-include ./test/fth_tests/errorreport.fth
-include ./test/fth_tests/coreexttest.fth
-\ include https://raw.githubusercontent.com/gerryjackson/forth2012-test-suite/master/src/blocktest.fth
-\ include https://raw.githubusercontent.com/gerryjackson/forth2012-test-suite/master/src/doubletest.fth
-\ include https://raw.githubusercontent.com/gerryjackson/forth2012-test-suite/master/src/exceptiontest.fth
-\ include https://raw.githubusercontent.com/gerryjackson/forth2012-test-suite/master/src/facilitytest.fth
-\ include https://raw.githubusercontent.com/gerryjackson/forth2012-test-suite/master/src/filetest.fth
-\ include https://raw.githubusercontent.com/gerryjackson/forth2012-test-suite/master/src/localstest.fth
-\ include https://raw.githubusercontent.com/gerryjackson/forth2012-test-suite/master/src/memorytest.fth
-\ include https://raw.githubusercontent.com/gerryjackson/forth2012-test-suite/master/src/toolstest.fth
-\ include https://raw.githubusercontent.com/gerryjackson/forth2012-test-suite/master/src/searchordertest.fth
-\ include https://raw.githubusercontent.com/gerryjackson/forth2012-test-suite/master/src/stringtest.fth
-\ REPORT-ERRORS
+
+
+include ~+/test/fth_tests/verbose-tester.fth
+include ~+/test/fth_tests/errorreport.fth
+include ~+/test/fth_tests/core.fr
+include ~+/test/fth_tests/utilities.fth
+include ~+/test/fth_tests/coreplustest.fth
 
 CR .( Forth tests completed ) CR CR
 

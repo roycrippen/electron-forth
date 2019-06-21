@@ -1,3 +1,5 @@
+include forth/another-lib.fth
+
 : square ( n -- n )
     dup * 
 ;

@@ -5,17 +5,20 @@ include forth/simple-lib.fth
 dup square
 dup square
 dup square
-.s
 
-say-roy
+show-stack 
 
-1 2 3 
-.s
+\ .s
+
+\ say-roy
+
+\ 1 2 3 
+\ .s
 
 \ clearstack
 
-10 20 + dup .
+\ 10 20 + dup .
 
-: aaa dup dup ;
+\ : aaa dup dup ;
 
-aaa
+\ aaa
