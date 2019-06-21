@@ -71,8 +71,13 @@ class NumericOperations {
         });
 
         f.defjs("um*", function (): void {
-            let first = fromInt(f.stack.pop(), true);
-            let second = fromInt(f.stack.pop(), true);
+            let p1 = f.stack.pop()
+            let first = fromInt(p1, true);
+            let first_ = new Long(first.low, 0)
+            // first.high = first.high < 0 ? 0 : first.high
+            let p2 = f.stack.pop()
+            let second = fromInt(p2, true);
+            // second.high = second.high < 0 ? 0 : second.high
             let result = first.mul(second);
             f.stack.push(result.low);
             f.stack.push(result.high);
