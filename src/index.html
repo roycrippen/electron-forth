@@ -1,39 +1,40 @@
 <!doctype html>
 
 <head>
-  <meta charset="UTF-8">
-  <title>Electron Forth</title>
-  <link rel="stylesheet" type="text/css" href="../css/forth.css">
-  <script src='../dist-js/ui-bundle.js' type="text/javascript"></script>
+    <meta charset="UTF-8">
+    <title>Electron Forth</title>
+    <link rel="stylesheet" type="text/css" href="../css/forth.css">
+    <script src='../dist-js/ui-bundle.js' type="text/javascript"></script>
 </head>
 
 <body>
-  <h3>Forth Execution Engine and Debugger</h3>
-  <div class="row-one">
-    <div class="col col-input">
-      <label for="input">Forth Commands</label>
-      <textarea id="input" rows=20 onkeyup="repl.interpret(event)"></textarea>
+    <h3>Forth Execution Engine and Debugger</h3>
+    <div class="row-one">
+        <div class="col col-input">
+            <label for="input">Forth Commands</label>
+            <textarea id="input" rows=20 onkeyup="repl.interpret(event)">include test/runtests.fth</textarea>
+            <!-- <textarea id="input" rows=20 onkeyup="repl.interpret(event)">include forth/scratch.fth</textarea> -->
+        </div>
+        <div class="col col-stack">
+            <label for="stack">Stack</label>
+            <textarea id="stack" rows=20 readonly></textarea>
+        </div>
     </div>
-    <div class="col col-stack">
-      <label for="stack">Stack</label>
-      <textarea id="stack" rows=20 readonly></textarea>
-    </div>
-  </div>
 
-  <div class="row-two">
-    <div class="col col-output">
-      <label for="output">Output</label>
-      <textarea id="output" rows=10" readonly></textarea>
+    <div class="row-two">
+        <div class="col col-output">
+            <label for="output">Output</label>
+            <textarea id="output" readonly></textarea>
+        </div>
+        <div class="col col-message">
+            <label for="message">Output -> Message</label>
+            <textarea id="message" rows=20 readonly></textarea>
+        </div>
     </div>
-    <div class="col col-message">
-      <label for="message">Output -> Message</label>
-      <textarea id="message" rows=10 readonly></textarea>
-    </div>
-  </div>
 
-  <!-- <section id="output"></section> -->
+    <!-- <section id="output"></section> -->
 
-  <!-- <section id="stack"></section> -->
+    <!-- <section id="stack"></section> -->
 
 </body>
 

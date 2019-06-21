@@ -41,7 +41,7 @@ h3 {
     flex: 1;
 }
 .col-message {
-    width: 50%;
+    width: 40%;
 }
 label {
     display: block;
@@ -53,7 +53,7 @@ textarea {
     margin: 2px 0;
     padding: 1px;
     border: 1px solid;
-    resize: none;
+    resize: vertical;
 }
 #stack, #output, #message {
     background-color: #d4dada;
