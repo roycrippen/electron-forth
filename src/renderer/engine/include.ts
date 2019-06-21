@@ -31,15 +31,15 @@ class Include {
                 return ["", err]
             }
 
-            f.writeMessage('_', `loaded: ${file}`)
+            // f.writeMessage('_', `loaded: ${file}`)
             let pos = src.indexOf("include ")
             while (pos > -1) {
-                let file_ = this.readWord(src.slice(pos + 8, pos + 100))
-                let [inline, err] = inlineIncludes(file_)
+                let fileInline = this.readWord(src.slice(pos + 8, pos + 100))
+                let [inline, err] = inlineIncludes(fileInline)
                 if (err.length > 0) {
                     return ["", err]
                 }
-                src = src.replace(`include ${file_}`, inline)
+                src = src.replace(`include ${fileInline}`, inline)
                 pos = src.indexOf("include ")
             }
             return [src, ""]

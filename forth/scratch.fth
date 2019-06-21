@@ -8,17 +8,17 @@ dup square
 
 show-stack 
 
-\ .s
+.s
 
-\ say-roy
+say-roy
 
-\ 1 2 3 
-\ .s
+1 2 3 
+.s
 
-\ clearstack
+clearstack
 
-\ 10 20 + dup .
+10 20 + dup .
 
-\ : aaa dup dup ;
+: aaa dup dup ;
 
-\ aaa
+aaa

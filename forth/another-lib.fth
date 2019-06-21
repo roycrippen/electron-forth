@@ -1,3 +1,3 @@
 : show-stack .s ;
 
-1 2 3 show-stack
+CR .( forth/another-lib.fth loaded ) CR
