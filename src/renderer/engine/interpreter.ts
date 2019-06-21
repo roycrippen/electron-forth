@@ -7,6 +7,27 @@ import InputExceptions from './input-exceptions'
 class Interpreter {
     public constructor(f: any) {
 
+        // function runInterpreter(): void {
+        //     // Run while there is still input to consume 
+        //     while (f._currentInput) {
+        //         try {
+        //             // As js doesn't support tail call optimisation the
+        //             // run function uses a trampoline to execute forth code
+        //             // eslint-disable-next-line no-constant-condition
+        //             while (true) {
+        //                 f.currentInstruction();
+        //                 f.currentInstruction = f.dataSpace[f.instructionPointer++];
+        //             }
+        //         } catch (err) {
+        //             if (err === InputExceptions.EndOfInput) {
+        //                 f._popInput();
+        //             } else {
+        //                 throw err;
+        //             }
+        //         }
+        //     }
+        // }
+
         function runInterpreter(): void {
             // Run while there is still input to consume 
             while (f._currentInput) {
@@ -99,8 +120,7 @@ class Interpreter {
             throw error || "";
         });
 
-        function run(input: string, outputCallback: Function, sourceId: number): void {
-            f.outputCallback = outputCallback;
+        function run(input: string, sourceId: number): void {
 
             f._newInput(input, sourceId || 0);
             f._output = "";
@@ -114,13 +134,36 @@ class Interpreter {
                     console.error(f._output);
                     f.currentInstruction = quit;
                     f.stack.clear();
-                    outputCallback(err, f._output);
+                    f.onForthOutput(err, f._output);
                     throw err;
                 }
             }
 
-            outputCallback(null, f._output);
+            f.onForthOutput(null, f._output);
         }
+
+        // function run(input: string, outputCallback: Function, sourceId: number): void {
+        //     f.outputCallback = outputCallback;
+
+        //     f._newInput(input, sourceId || 0);
+        //     f._output = "";
+
+        //     try {
+        //         runInterpreter();
+        //     } catch (err) {
+        //         if (err !== InputExceptions.WaitingOnInput) {
+        //             console.error("Exception " + err + " at:\n" + printStackTrace());
+        //             console.error(f._currentInput.inputBuffer());
+        //             console.error(f._output);
+        //             f.currentInstruction = quit;
+        //             f.stack.clear();
+        //             outputCallback(err, f._output);
+        //             throw err;
+        //         }
+        //     }
+
+        //     outputCallback(null, f._output);
+        // }
 
         f.defjs('abort"', function abortQuote(): void {
             let error = f._currentInput.parse('"'.charCodeAt(0))[2];

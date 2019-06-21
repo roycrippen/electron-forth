@@ -3,52 +3,76 @@
 
 // import request from 'request'
 // import url from 'url'
-import fs from 'fs'
 import InputExceptions from './input-exceptions'
+import fs from 'fs'
+import path from 'path'
 
 class Include {
     public constructor(f: any) {
-        let includes: string[] = []
-
-        const isIncluded = (file: string): boolean => {
-            return includes.indexOf(file) > -1
+        const include = (): void => {
+            let file = f._readWord();
+            let [body, err] = inlineIncludes(file)
+            // let [body, err] = this.readSrc(file)
+            if (err.length == 0) {
+                const xs = body.trim().split('\n')
+                xs.forEach(element => {
+                    f.run(`${element}\n`)
+                });
+                throw InputExceptions.EndOfInput;
+            } else {
+                console.error(err)
+                f.writeMessage('_', err)
+            }
         }
 
-        const include = (): void => {
-            let outputCallback = f.outputCallback;
-
-            let file = f._readWord();
-            if (isIncluded(file)) {
-                const msg = `${file} already included`
-                console.log(msg)
-                f.writeMessage('_', msg)
-                return
-            } else {
-                if ((process as any).browser || file.match(/^http/)) {
-                    const err = "Failed to load http file " + file +
-                        ". This functionality has been removed";
-                    console.error(err);
-                    f.writeMessage('_', err)
-                } else {
-                    try {
-
-                        let body = fs.readFileSync(file, 'utf8');
-                        f.writeMessage('_', `loaded: ${file}`)
-                        includes.push(file)
-                        f.run(body, outputCallback, file);
-
-                    } catch (error) {
-                        const err = `Failed to load file ${file}. ${error}`
-                        console.error(err)
-                        f.writeMessage('_', err)
-                    }
-                }
-                throw InputExceptions.WaitingOnInput;
+        const inlineIncludes = (file: string): [string, string] => {
+            let [src, err] = this.readSrc(file)
+            if (err.length > 0) {
+                return ["", err]
             }
+
+            f.writeMessage('_', `loaded: ${file}`)
+            let pos = src.indexOf("include ")
+            while (pos > -1) {
+                let file_ = this.readWord(src.slice(pos + 8, pos + 100))
+                let [inline, err] = inlineIncludes(file_)
+                if (err.length > 0) {
+                    return ["", err]
+                }
+                src = src.replace(`include ${file_}`, inline)
+                pos = src.indexOf("include ")
+            }
+            return [src, ""]
         }
 
         f.defjs("include", include, true);
     }
+
+    private readWord(src: string): string {
+        let s = "";
+        for (const c of src) {
+            if (c == ' ' || c == '\n') {
+                return s
+            } else {
+                s += c
+            }
+
+        };
+        return ""
+    }
+
+    private readSrc(file: string): [string, string] {
+        if (file.startsWith('~+')) {
+            file = `.${file.slice(2)}`
+        }
+        try {
+            let src = fs.readFileSync(file, 'utf8')
+            return [src, ""]
+        } catch (e) {
+            const err = `Failed to load file ${path}. ${e}`
+            return ["", err]
+        }
+    }
 }
-// module.exports = Include;
+
 export default Include;
