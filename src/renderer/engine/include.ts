@@ -33,7 +33,8 @@ class Include {
 
             // f.writeMessage('_', `loaded: ${file}`)
             let pos = src.indexOf("include ")
-            while (pos > -1) {
+            let comment = pos > -1 ? src.slice(pos - 2, pos) == '\\ ' : false
+            while (pos > -1 && !comment) {
                 let fileInline = this.readWord(src.slice(pos + 8, pos + 100))
                 let [inline, err] = inlineIncludes(fileInline)
                 if (err.length > 0) {
@@ -41,6 +42,7 @@ class Include {
                 }
                 src = src.replace(`include ${fileInline}`, inline)
                 pos = src.indexOf("include ")
+                comment = pos > -1 ? src.slice(pos - 2, pos) == '\\ ' : false
             }
             return [src, ""]
         }
