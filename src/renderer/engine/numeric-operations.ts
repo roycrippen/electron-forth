@@ -43,6 +43,13 @@ class NumericOperations {
             f.stack.push(value.high);
         });
 
+        f.defjs("d>s", function doubleToSingle(): void {
+            let high = f.stack.pop();
+            let low = f.stack.pop();
+            let d = new Long(low, high)
+            f.stack.push(d.toInt)
+        });
+
         f.defjs("*/", function multiplyDivide(): void {
             let divisor = fromInt(f.stack.pop());
             let first = fromInt(f.stack.pop());
@@ -71,13 +78,10 @@ class NumericOperations {
         });
 
         f.defjs("um*", function (): void {
-            let p1 = f.stack.pop()
-            let first = fromInt(p1, true);
-            let first_ = new Long(first.low, 0)
-            // first.high = first.high < 0 ? 0 : first.high
-            let p2 = f.stack.pop()
-            let second = fromInt(p2, true);
-            // second.high = second.high < 0 ? 0 : second.high
+            let first = fromInt(f.stack.pop());
+            first = new Long(first.low, 0, true)
+            let second = fromInt(f.stack.pop());
+            second = new Long(second.low, 0, true)
             let result = first.mul(second);
             f.stack.push(result.low);
             f.stack.push(result.high);
@@ -85,22 +89,33 @@ class NumericOperations {
 
         f.defjs("um/mod", function unsignedDivideMod(): void {
             let divisor = fromInt(f.stack.pop());
+            divisor = new Long(divisor.low, 0, true)
             let bigPart = f.stack.pop();
             let smallPart = f.stack.pop();
             let long = new Long(smallPart, bigPart, true);
-            let quotient = long.div(divisor).toInt();
+            let quotient = long.div(divisor).toSigned().toInt();
             let mod = long.mod(divisor).toInt();
             f.stack.push(mod);
             f.stack.push(quotient);
         });
 
         f.defjs("fm/mod", function flooredDivideMod(): void {
-            let divisor = fromInt(f.stack.pop());
+            let d = f.stack.pop()
+            let divisor = fromInt(d);
             let bigPart = f.stack.pop();
             let smallPart = f.stack.pop();
             let long = new Long(smallPart, bigPart);
             let quotient = long.div(divisor).toInt();
             let mod = long.mod(divisor).toInt();
+
+            if (mod > 0 && quotient < 0) {
+                quotient -= 1
+                mod = Math.abs(smallPart) - Math.abs(d * quotient)
+            } else if (mod < 0 && quotient < 0) {
+                quotient -= 1
+                mod = Math.abs(d * quotient) - Math.abs(smallPart)
+            }
+
             f.stack.push(mod);
             f.stack.push(quotient);
         });
