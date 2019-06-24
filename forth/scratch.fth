@@ -8,14 +8,10 @@ dup square
 
 show-stack 
 
-.s
-
 say-roy
 
 1 2 3 
 .s
-
-clearstack
 
 10 20 + dup .
 

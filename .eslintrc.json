@@ -18,7 +18,6 @@
     "sourceType": "module"
   },
   "rules": {
-    "no-var": 1,
-    "indent": 2
+    "no-var": 1
   }
 }
