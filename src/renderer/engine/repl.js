@@ -4,20 +4,26 @@
 // var Forth = require("./forth.js");
 
 import Forth from './forth'
+import fs from 'fs'
+import path from 'path'
 
 class Repl {
     constructor() {
-        let forth = new Forth();
+        let forth;
 
         const writeMessage = (output, message) => {
             if (output.trim() !== "") {
                 const outNode = document.getElementById("output")
-                outNode.value += `${output.trim()}\n`
-                outNode.scrollTop = outNode.scrollHeight
+                if (outNode) {
+                    outNode.value += `${output.trim()}\n`
+                    outNode.scrollTop = outNode.scrollHeight
+                }
 
                 const msgNode = document.getElementById("message")
-                msgNode.value += `${message.trim()}\n`
-                msgNode.scrollTop = msgNode.scrollHeight
+                if (msgNode) {
+                    msgNode.value += `${message.trim()}\n`
+                    msgNode.scrollTop = msgNode.scrollHeight
+                }
             }
         }
 
@@ -29,7 +35,9 @@ class Repl {
         function showStack () {
             const stackStr = forth.stack.getStack().reverse().join('\n');
             const stackNode = document.getElementById("stack");
-            stackNode.value = stackStr;
+            if (stackNode) {
+                stackNode.value = stackStr
+            }
         }
 
         function onForthOutput (error, output) {
@@ -53,24 +61,37 @@ class Repl {
         }
 
         function loadForth (file) {
-            let xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    forth.run(xmlhttp.responseText);
-                }
-            };
-            xmlhttp.open("GET", file, true);
-            xmlhttp.send();
+            // let xmlhttp = new XMLHttpRequest();
+            // xmlhttp.onreadystatechange = function () {
+            //     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            //         forth.run(xmlhttp.responseText);
+            //     }
+            // };
+            // xmlhttp.open("GET", file, true);
+            // xmlhttp.send();
+            try {
+                let src = fs.readFileSync(file, 'utf8')
+                forth.run(src)
+            } catch (e) {
+                const err = `Failed to load and execute forth file ${file}. ${e}`
+                throw err
+            }
         }
 
-        loadForth("../forth/forth.fth")
-        forth.writeMessage = writeMessage
-        forth.clearMessages = clearMessages
-        forth.onForthOutput = onForthOutput
+        const initForth = () => {
+            forth = new Forth();
+            forth.writeMessage = writeMessage
+            forth.clearMessages = clearMessages
+            forth.onForthOutput = onForthOutput
+            loadForth("forth/forth.fth")
+        }
+
+        initForth()
 
         return {
             interpret: function (event) {
                 if (event.key === "Enter" && event.ctrlKey) {
+                    initForth()
                     forth.stack.clear()
                     clearMessages()
                     forth._currentInput = null
