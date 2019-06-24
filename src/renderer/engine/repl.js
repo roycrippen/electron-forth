@@ -26,13 +26,13 @@ class Repl {
             document.getElementById("message").value = ""
         }
 
-        function showStack() {
+        function showStack () {
             const stackStr = forth.stack.getStack().reverse().join('\n');
             const stackNode = document.getElementById("stack");
             stackNode.value = stackStr;
         }
 
-        function onForthOutput(error, output) {
+        function onForthOutput (error, output) {
             if (error) {
                 writeMessage('_', error)
             } else {
@@ -41,23 +41,21 @@ class Repl {
             showStack();
         }
 
-        function runforth() {
+        function runforth () {
             let inputNode = document.getElementById("input");
             let input = inputNode.value.trim();
             if (input) {
                 const xs = input.split('\n')
                 xs.forEach(element => {
-                    // forth.run(`${element}\n`, onForthOutput)
                     forth.run(`${element}\n`)
                 });
             }
         }
 
-        function loadForth(file) {
+        function loadForth (file) {
             let xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    // forth.run(xmlhttp.responseText, onForthOutput);
                     forth.run(xmlhttp.responseText);
                 }
             };

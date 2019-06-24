@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 
@@ -6,27 +7,6 @@ import InputExceptions from './input-exceptions'
 
 class Interpreter {
     public constructor(f: any) {
-
-        // function runInterpreter(): void {
-        //     // Run while there is still input to consume 
-        //     while (f._currentInput) {
-        //         try {
-        //             // As js doesn't support tail call optimisation the
-        //             // run function uses a trampoline to execute forth code
-        //             // eslint-disable-next-line no-constant-condition
-        //             while (true) {
-        //                 f.currentInstruction();
-        //                 f.currentInstruction = f.dataSpace[f.instructionPointer++];
-        //             }
-        //         } catch (err) {
-        //             if (err === InputExceptions.EndOfInput) {
-        //                 f._popInput();
-        //             } else {
-        //                 throw err;
-        //             }
-        //         }
-        //     }
-        // }
 
         function runInterpreter(): void {
             // Run while there is still input to consume 
@@ -37,6 +17,12 @@ class Interpreter {
                     // eslint-disable-next-line no-constant-condition
                     while (true) {
                         f.currentInstruction();
+                        let b = f.endOfInput
+                        if (b) {
+                            f.endOfInput = false
+                            f._popInput();
+                            break;
+                        }
                         f.currentInstruction = f.dataSpace[f.instructionPointer++];
                     }
                 } catch (err) {
@@ -61,7 +47,11 @@ class Interpreter {
         function interpretWord(): void {
             let word = f._readWord();
             while (!word) {
-                if (!f._currentInput.refill()) throw InputExceptions.EndOfInput;
+                if (!f._currentInput.refill()) {
+                    f.endOfInput = true
+                    // throw InputExceptions.EndOfInput;
+                    return;
+                }
                 word = f._readWord();
             }
 
@@ -135,35 +125,15 @@ class Interpreter {
                     f.currentInstruction = quit;
                     f.stack.clear();
                     f.onForthOutput(err, f._output);
-                    throw err;
+                    throw "forth cannot continue, terminating the application"
+                } else {
+                    console.log("WaitOnInput thrown...")
                 }
             }
 
-            f.onForthOutput(null, f._output);
+            f.onForthOutput(null, f._output)
+            f._output = ""
         }
-
-        // function run(input: string, outputCallback: Function, sourceId: number): void {
-        //     f.outputCallback = outputCallback;
-
-        //     f._newInput(input, sourceId || 0);
-        //     f._output = "";
-
-        //     try {
-        //         runInterpreter();
-        //     } catch (err) {
-        //         if (err !== InputExceptions.WaitingOnInput) {
-        //             console.error("Exception " + err + " at:\n" + printStackTrace());
-        //             console.error(f._currentInput.inputBuffer());
-        //             console.error(f._output);
-        //             f.currentInstruction = quit;
-        //             f.stack.clear();
-        //             outputCallback(err, f._output);
-        //             throw err;
-        //         }
-        //     }
-
-        //     outputCallback(null, f._output);
-        // }
 
         f.defjs('abort"', function abortQuote(): void {
             let error = f._currentInput.parse('"'.charCodeAt(0))[2];
@@ -180,6 +150,7 @@ class Interpreter {
         // Set initial instruction
         f.currentInstruction = quit;
         f.run = run;
+        f.endOfInput = false
     }
 }
 export default Interpreter;

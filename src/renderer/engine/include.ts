@@ -3,65 +3,65 @@
 
 // import request from 'request'
 // import url from 'url'
-import InputExceptions from './input-exceptions'
+// import InputExceptions from './input-exceptions'
 import fs from 'fs'
 import path from 'path'
 
 class Include {
     public constructor(f: any) {
+        // const inlineIncludes = (file: string): [string, string] => {
+        //     let [src, err] = this.readSrc(file)
+        //     if (err.length > 0) {
+        //         return ["", err]
+        //     }
+
+        //     let pos = src.indexOf("include ")
+        //     let comment = pos > -1 ? src.slice(pos - 2, pos) == '\\ ' : false
+        //     while (pos > -1 && !comment) {
+        //         let fileInline = this.readWord(src.slice(pos + 8, pos + 100))
+        //         let [inline, err] = inlineIncludes(fileInline)
+        //         if (err.length > 0) {
+        //             return ["", err]
+        //         }
+        //         src = src.replace(`include ${fileInline}`, inline)
+        //         pos = src.indexOf("include ")
+        //         comment = pos > -1 ? src.slice(pos - 2, pos) == '\\ ' : false
+        //     }
+        //     return [src, ""]
+        // }
+
         const include = (): void => {
             let file = f._readWord();
-            let [body, err] = inlineIncludes(file)
-            // let [body, err] = this.readSrc(file)
+            // let [body, err] = inlineIncludes(file)
+            let [body, err] = this.readSrc(file)
             if (err.length == 0) {
                 const xs = body.trim().split('\n')
-                xs.forEach(element => {
+
+                xs.forEach((element: string): void => {
                     f.run(`${element}\n`)
                 });
-                throw InputExceptions.EndOfInput;
+                f.endOfInput = true
             } else {
                 console.error(err)
                 f.writeMessage('_', err)
             }
         }
 
-        const inlineIncludes = (file: string): [string, string] => {
-            let [src, err] = this.readSrc(file)
-            if (err.length > 0) {
-                return ["", err]
-            }
-
-            // f.writeMessage('_', `loaded: ${file}`)
-            let pos = src.indexOf("include ")
-            let comment = pos > -1 ? src.slice(pos - 2, pos) == '\\ ' : false
-            while (pos > -1 && !comment) {
-                let fileInline = this.readWord(src.slice(pos + 8, pos + 100))
-                let [inline, err] = inlineIncludes(fileInline)
-                if (err.length > 0) {
-                    return ["", err]
-                }
-                src = src.replace(`include ${fileInline}`, inline)
-                pos = src.indexOf("include ")
-                comment = pos > -1 ? src.slice(pos - 2, pos) == '\\ ' : false
-            }
-            return [src, ""]
-        }
-
-        f.defjs("include", include, true);
+        f.defjs("include", include);
     }
 
-    private readWord(src: string): string {
-        let s = "";
-        for (const c of src) {
-            if (c == ' ' || c == '\n') {
-                return s
-            } else {
-                s += c
-            }
+    // private readWord(src: string): string {
+    //     let s = "";
+    //     for (const c of src) {
+    //         if (c == ' ' || c == '\n') {
+    //             return s
+    //         } else {
+    //             s += c
+    //         }
 
-        };
-        return ""
-    }
+    //     }
+    //     return ""
+    // }
 
     private readSrc(file: string): [string, string] {
         if (file.startsWith('~+')) {
