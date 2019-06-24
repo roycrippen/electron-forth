@@ -7,7 +7,7 @@ From a fork of [jsForth](https://github.com/brendanator/jsForth).
 
 ### Quick Start
 
-```
+```bash
 # clone the repository
 git clone https://github.com/roycrippen/electron-forth.git
 
