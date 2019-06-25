@@ -2,7 +2,7 @@
 
 import NumericOperations from './numeric-operations';
 import Output from './output';
-import Definitions from './definitions'
+import Definitions from './Definitions'
 import BooleanOperations from './boolean-operations'
 import StackOperations from './stack-operations'
 import MemoryOperations from './memory-operations'
@@ -11,8 +11,9 @@ import JsInterop from './js-interop'
 import Input from './input'
 import Include from './Include'
 import Interpreter from './interpreter'
-import Stack from './stack'
+import Stack from './Stack'
 import Ide from './Ide'
+import Core from './Core'
 
 class Forth {
     public instructionPointer: number = 0
@@ -22,14 +23,24 @@ class Forth {
     public _currentInput = null
 
     public run: Function = new Function()
-    public defjs: Function = new Function()
     public _readWord: Function = new Function()
+
+    // from Definitions.ts
+    public defheader: Function = new Function()
+    public defjs: Function = new Function()
+    public defvar: Function = new Function()
+    public _latest: Function = new Function()
+    public compiling: Function = new Function()
+    public compileEnter: Function = new Function()
+    public findDefinition: Function = new Function()
+    public _lit: Function = new Function()
 
     public ide: Ide
     public endOfInput = false
 
     public constructor() {
         new Definitions(this);
+        new Core(this)
         new Input(this);
         new NumericOperations(this);
         new BooleanOperations(this);

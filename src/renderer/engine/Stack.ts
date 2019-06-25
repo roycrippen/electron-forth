@@ -8,7 +8,7 @@ class Stack {
         this.stackName = name
     }
 
-    public pop(): void {
+    public pop(): any {
         if (this.data.length > 0)
             return this.data.pop()
         else {
@@ -18,7 +18,7 @@ class Stack {
     public push(element: any): void {
         this.data.push(element)
     }
-    public peek(offset: any): void {
+    public peek(offset: any): any {
         const index = this.data.length - (offset || 1)
         if (0 <= index && index < this.data.length)
             return this.data[index]
