@@ -4,6 +4,7 @@
 
 // var InputExceptions = require("./input-exceptions.js");
 import InputExceptions from './input-exceptions'
+// import Forth from './forth'
 
 class Interpreter {
     public constructor(f: any) {
@@ -124,14 +125,14 @@ class Interpreter {
                     console.error(f._output);
                     f.currentInstruction = quit;
                     f.stack.clear();
-                    f.onForthOutput(err, f._output);
+                    f.ide.onForthOutput(err, f._output);
                     throw "forth cannot continue, terminating the application"
                 } else {
                     console.log("WaitOnInput thrown...")
                 }
             }
 
-            f.onForthOutput(null, f._output)
+            f.ide.onForthOutput(null, f._output)
             f._output = ""
         }
 

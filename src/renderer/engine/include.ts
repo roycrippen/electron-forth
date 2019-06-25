@@ -40,7 +40,6 @@ class Include {
                 f.endOfInput = true
             } else {
                 console.error(err)
-                f.writeMessage('_', err)
             }
         }
 

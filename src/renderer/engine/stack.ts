@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 class Stack {
+    private stackName: string
+    private data: any = []
+
     public constructor(name: string) {
         this.stackName = name
     }
-
-    private stackName: string
-    private data: any = []
 
     public pop(): void {
         if (this.data.length > 0)

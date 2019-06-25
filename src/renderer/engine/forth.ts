@@ -11,32 +11,31 @@ import JsInterop from './js-interop'
 import Input from './input'
 import Include from './include'
 import Interpreter from './interpreter'
-import Stack from './stack';
+import Stack from './stack'
+import Ide from './ide'
 
 class Forth {
-    public instructionPointer: number = 0;
-    public dataSpace: [] = [];
-    public returnStack: Stack = new Stack("Return Stack");
-    public stack: Stack = new Stack("Stack");
+    public instructionPointer: number = 0
+    public dataSpace: [] = []
+    public returnStack: Stack = new Stack("Return Stack")
+    public stack: Stack = new Stack("Stack")
+    public _currentInput = null
+    public run: Function = new Function()
+    public ide: Ide
 
     public constructor() {
-        // this will let us use end around dictionary and 
-        // have properties persist because returning 
-        let forth = Object.assign({}, this);
-
-        new Definitions(forth);
-        new Input(forth);
-        new NumericOperations(forth);
-        new BooleanOperations(forth);
-        new StackOperations(forth);
-        new MemoryOperations(forth);
-        new ControlStructures(forth);
-        new Output(forth);
-        new JsInterop(forth);
-        new Include(forth);
-        new Interpreter(forth);
-
-        return forth;
+        new Definitions(this);
+        new Input(this);
+        new NumericOperations(this);
+        new BooleanOperations(this);
+        new StackOperations(this);
+        new MemoryOperations(this);
+        new ControlStructures(this);
+        new Output(this);
+        new JsInterop(this);
+        new Include(this);
+        new Interpreter(this);
+        this.ide = new Ide(this)
     }
 }
 

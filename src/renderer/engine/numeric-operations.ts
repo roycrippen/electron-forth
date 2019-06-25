@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+// import Forth from './forth'
 import Long, { fromInt } from "long";
 
 class NumericOperations {
