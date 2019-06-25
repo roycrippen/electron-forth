@@ -15,4 +15,14 @@ say-roy
 
 10 20 + dup .
 
-dup dup
+3
+2
+1
+rot
+rot
+rot
+.s
+
+
+.
+
