@@ -9,10 +9,10 @@ import MemoryOperations from './memory-operations'
 import ControlStructures from './control-structures'
 import JsInterop from './js-interop'
 import Input from './input'
-import Include from './include'
+import Include from './Include'
 import Interpreter from './interpreter'
 import Stack from './stack'
-import Ide from './ide'
+import Ide from './Ide'
 
 class Forth {
     public instructionPointer: number = 0
@@ -41,6 +41,16 @@ class Forth {
         new Include(this);
         new Interpreter(this);
         this.ide = new Ide(this)
+        this.ide.loadForth("forth/forth.fth")
+    }
+
+    public interpret(event: KeyboardEvent): void {
+        if (event.key === "Enter" && event.ctrlKey) {
+            this.stack.clear()
+            this.ide.clearMessages()
+            this._currentInput = null
+            this.ide.runforth()
+        }
     }
 }
 

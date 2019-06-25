@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 
 import { ipcRenderer } from "electron";
-import Repl from './engine/repl'
 import Forth from './engine/forth'
 
 ipcRenderer.on("ping", (_: Event, msg: string): void => {
@@ -11,4 +10,4 @@ ipcRenderer.on("ping", (_: Event, msg: string): void => {
 });
 
 const _global = global as any;
-_global.repl = new Repl(new Forth());
+_global.forth = new Forth();
