@@ -18,7 +18,7 @@ class Stack {
     public push(element: any): void {
         this.data.push(element)
     }
-    public peek(offset: any): any {
+    public peek(offset?: any): any {
         const index = this.data.length - (offset || 1)
         if (0 <= index && index < this.data.length)
             return this.data[index]

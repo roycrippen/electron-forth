@@ -1,6 +1,8 @@
+import Forth from "./forth";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 class StackOperations {
-    public constructor(f: any) {
+    public constructor(f: Forth) {
         f.defjs("clearstack", function clearstack(): void {
             f.stack.clear();
         });
