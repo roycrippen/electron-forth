@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 import NumericOperations from './numeric-operations';
@@ -17,10 +18,11 @@ import Core from './Core'
 
 class Forth {
     public instructionPointer: number = 0
-    public dataSpace: [] = []
+    public dataSpace: any[] = []
     public returnStack: Stack = new Stack("Return Stack")
     public stack: Stack = new Stack("Stack")
     public _currentInput = null
+    private coreLast: [number, number] = [0, 0]
 
     public run: Function = new Function()
     public _readWord: Function = new Function()
@@ -53,14 +55,28 @@ class Forth {
         new Interpreter(this);
         this.ide = new Ide(this)
         this.ide.loadForth("forth/forth.fth")
+        this.coreLast = [this._latest(), this.dataSpace.length]
     }
 
     public interpret(event: KeyboardEvent): void {
-        if (event.key === "Enter" && event.ctrlKey) {
+        const prep = (): void => {
             this.stack.clear()
+            this.ide.showStack()
             this.ide.clearMessages()
             this._currentInput = null
+
+            // put core back to original state
+            const [pos, end] = this.coreLast
+            this._latest(pos)
+            this.dataSpace.length = end
+        }
+
+        if (event.key === "Enter" && event.ctrlKey) {
+            prep()
             this.ide.runforth()
+        } else if (event.ctrlKey && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
+            prep()
+            this.ide.runforth(true)
         }
     }
 }

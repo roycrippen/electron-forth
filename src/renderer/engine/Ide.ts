@@ -34,7 +34,7 @@ class Ide {
         msg.value = ""
     }
 
-    private showStack(): void {
+    public showStack(): void {
         const stackStr = this.forth.stack.getStack().reverse().join('\n')
         const stackNode = document.getElementById("stack") as HTMLTextAreaElement
         if (stackNode) {
@@ -53,11 +53,18 @@ class Ide {
         }
     }
 
-    public runforth(): void {
+    public runforth(cursorPos: boolean = false): void {
+
         let inputNode = document.getElementById("input") as HTMLTextAreaElement
         let input = inputNode.value.trim();
         if (input) {
-            const xs = input.split('\n')
+            let xs = input.split('\n')
+            let line = xs.length
+            if (cursorPos) {
+                let pos = inputNode.selectionStart
+                line = input.substr(0, pos).split("\n").length
+                xs = xs.slice(0, line - 1)
+            }
             xs.forEach((element: string): void => {
                 this.forth.run(`${element}\n`)
             });

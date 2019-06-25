@@ -15,6 +15,4 @@ say-roy
 
 10 20 + dup .
 
-: aaa dup dup ;
-
-aaa
+dup dup
