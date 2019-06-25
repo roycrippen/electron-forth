@@ -151,7 +151,7 @@ class Interpreter {
         // Set initial instruction
         f.currentInstruction = quit;
         f.run = run;
-        f.endOfInput = false
+        // f.endOfInput = false
     }
 }
 export default Interpreter;

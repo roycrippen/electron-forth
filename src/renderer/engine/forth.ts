@@ -20,8 +20,13 @@ class Forth {
     public returnStack: Stack = new Stack("Return Stack")
     public stack: Stack = new Stack("Stack")
     public _currentInput = null
+
     public run: Function = new Function()
+    public defjs: Function = new Function()
+    public _readWord: Function = new Function()
+
     public ide: Ide
+    public endOfInput = false
 
     public constructor() {
         new Definitions(this);
