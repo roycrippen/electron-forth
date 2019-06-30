@@ -12,21 +12,38 @@
     <div class="row-one">
         <div class="col col-input">
             <label for="input">Forth Commands</label>
-            <!-- <textarea id="input" rows=20 onkeyup="forth.interpret(event)">include forth/fth_tests/runtests.fth</textarea> -->
-            <!-- <textarea id="input" rows=20 onkeyup="forth.interpret(event)">include forth/scratch.fth</textarea> -->
-            <textarea id="input" rows=20 onkeyup="gforth.interpret(event)">
-2
-3
-+
-dup
-*
+            <!-- <textarea id="input" rows=20
+                onkeyup="gforth.interpret(event)">include ~+/forth/fth_tests/runtests.fth</textarea> -->
+            <textarea id="input" rows=30 onkeyup="gforth.interpret(event)">
+\ testing file
+include ~+/forth/simple-lib.fth
+
+2 
+dup square
+dup square
+dup square
+
+show-stack-aaa
+
+say-roy
+
+1 2 3 
 .s
-1 2 3
-            </textarea>
+
+10 20 + dup .
+
+3
+2
+1
+rot
+rot
+rot
+.s
+</textarea>
         </div>
         <div class="col col-stack">
             <label for="stack">Stack</label>
-            <textarea id="stack" rows=20 readonly></textarea>
+            <textarea id="stack" rows=30 readonly></textarea>
         </div>
     </div>
 

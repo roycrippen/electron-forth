@@ -1,12 +1,12 @@
 \ testing file
-include forth/simple-lib.fth
+include ~+/forth/simple-lib.fth
 
 2 
 dup square
 dup square
 dup square
 
-show-stack 
+show-stack-aaa
 
 say-roy
 
@@ -22,7 +22,3 @@ rot
 rot
 rot
 .s
-
-
-.
-

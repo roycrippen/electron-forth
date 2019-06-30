@@ -5,12 +5,27 @@ class Gforth {
     public p: ChildProcessWithoutNullStreams
 
     private stack: string[] = []
+    private resetStr: string = `
+    [IFDEF] clear-point 
+        clear-point 
+     [ENDIF]
+     marker clear-point
+     `
 
     public constructor() {
         const cmd = 'gforth'
         this.p = spawn(cmd)
 
-        this.p.stdout.on('data', (data) => {
+        this.p.stdout.on('data', (dataBytes) => {
+            let data = dataBytes.toString()
+            let pos = data.search(': show-stack .s ;  ok')
+            if (pos > -1) {
+                data = 'Forth loaded...\n'
+            }
+            pos = data.search('marker clear-point  ok')
+            if (pos > -1) {
+                data = data.slice(pos + 22)
+            }
             let xs = data.toString().split('\n')
             xs.forEach((element: string) => {
                 if (element.slice(0, 11) == 'show-stack ') {
@@ -32,24 +47,25 @@ class Gforth {
             console.log('child process exited with code ' + code)
         })
 
-        let s = ': show-stack .s ;\n'
-        this.p.stdin.write(s)
+        this.p.stdin.write(': show-stack .s ;\n')
     }
 
     private showStack(xs: string[]): void {
         let stackStr = xs.join('\n')
-        const stackNode = document.getElementById("stack") as HTMLTextAreaElement
-        if (stackNode) {
-            stackNode.value = stackStr
+        const node = document.getElementById("stack") as HTMLTextAreaElement
+        if (node) {
+            node.value = stackStr
+            node.scrollTop = node.scrollHeight
         }
     }
 
     private appendOutput(s: string): void {
         s = s.trim()
         if (s.length > 0) {
-            const stackNode = document.getElementById("output") as HTMLTextAreaElement
-            if (stackNode) {
-                stackNode.value += `${s}\n`
+            const node = document.getElementById("output") as HTMLTextAreaElement
+            if (node) {
+                node.value += `${s}\n`
+                node.scrollTop = node.scrollHeight
             }
         }
     }
@@ -57,9 +73,9 @@ class Gforth {
     private showError(s: string): void {
         s = s.trim()
         if (s.length > 0) {
-            const stackNode = document.getElementById("error") as HTMLTextAreaElement
-            if (stackNode) {
-                stackNode.value += `${s}\n`
+            const node = document.getElementById("error") as HTMLTextAreaElement
+            if (node) {
+                node.value += `${s}\n`
             }
         }
     }
@@ -95,7 +111,12 @@ class Gforth {
     }
 
     public run(s: string): void {
+        // clear the forth stack
         this.p.stdin.write('clearstack\n')
+
+        // clear all definitions and reset the marker 
+        this.p.stdin.write(this.resetStr)
+
         this.p.stdin.write(s)
         this.p.stdin.write('show-stack\n')
     }
