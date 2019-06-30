@@ -14,13 +14,14 @@
             <label for="input">Forth Commands</label>
             <!-- <textarea id="input" rows=20 onkeyup="forth.interpret(event)">include forth/fth_tests/runtests.fth</textarea> -->
             <!-- <textarea id="input" rows=20 onkeyup="forth.interpret(event)">include forth/scratch.fth</textarea> -->
-            <textarea id="input" rows=20 onkeyup="forth.interpret(event)">
+            <textarea id="input" rows=20 onkeyup="gforth.interpret(event)">
 2
 3
 +
 dup
 *
 .s
+1 2 3
             </textarea>
         </div>
         <div class="col col-stack">
@@ -34,9 +35,9 @@ dup
             <label for="output">Output</label>
             <textarea id="output" readonly></textarea>
         </div>
-        <div class="col col-message">
-            <label for="message">Output -> Message</label>
-            <textarea id="message" rows=20 readonly></textarea>
+        <div class="col col-error">
+            <label for="error">Error</label>
+            <textarea id="error" rows=20 readonly></textarea>
         </div>
     </div>
 
