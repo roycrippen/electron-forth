@@ -1,8 +1,8 @@
 # electron-forth
 
-An [Electron](https://electronjs.org) TypeScript of implementation of forth with step debugging.
+An [Electron](https://electronjs.org) TypeScript IDE for Forth with step debugging.
 
-From a fork of [jsForth](https://github.com/brendanator/jsForth).
+Requires [gforth](https://www.gnu.org/software/gforth/).
 
 
 ### Quick Start
