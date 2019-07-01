@@ -5,37 +5,14 @@ class Gforth {
     public p: ChildProcessWithoutNullStreams
 
     private stack: string[] = []
-    private resetStr: string = `
-    [IFDEF] clear-point 
-        clear-point 
-     [ENDIF]
-     marker clear-point
-     `
 
     public constructor() {
         const cmd = 'gforth'
         this.p = spawn(cmd)
 
-        this.p.stdout.on('data', (dataBytes) => {
-            let data = dataBytes.toString()
-            let pos = data.search(': show-stack .s ;  ok')
-            if (pos > -1) {
-                data = 'Forth loaded...\n'
-            }
-            pos = data.search('marker clear-point  ok')
-            if (pos > -1) {
-                data = data.slice(pos + 22)
-            }
-            let xs = data.toString().split('\n')
-            xs.forEach((element: string) => {
-                if (element.slice(0, 11) == 'show-stack ') {
-                    this.stack = this.fillStack(element)
-                    this.showStack(this.stack)
-                } else {
-                    this.appendOutput(element)
-                    // console.log('stdout event: ' + data)
-                }
-            });
+        this.p.stdout.on('data', (data: Uint8Array) => {
+            this.processForthOutput(data)
+            // console.log('data event: ' + data)
         })
 
         this.p.stderr.on('data', (data: Uint8Array) => {
@@ -48,6 +25,7 @@ class Gforth {
         })
 
         this.p.stdin.write(': show-stack .s ;\n')
+        this.p.stdin.write('marker clear-point\n')
     }
 
     private showStack(xs: string[]): void {
@@ -115,7 +93,8 @@ class Gforth {
         this.p.stdin.write('clearstack\n')
 
         // clear all definitions and reset the marker 
-        this.p.stdin.write(this.resetStr)
+        this.p.stdin.write('clear-point\n')
+        this.p.stdin.write('marker clear-point\n')
 
         this.p.stdin.write(s)
         this.p.stdin.write('show-stack\n')
@@ -149,6 +128,34 @@ class Gforth {
         msg.value = ""
     }
 
+    private processForthOutput(dataBytes: Uint8Array): void {
+        let data = dataBytes.toString()
+
+        // cleanup output
+        const pos = data.search(': show-stack .s ;  ok')
+        if (pos > -1) {
+            data = 'Forth loaded...\n'
+        }
+        if (data.startsWith('clearstack  ok')) {
+            data = data.slice(15)
+        }
+        if (data.startsWith('clear-point  ok')) {
+            data = data.slice(16)
+        }
+        if (data.startsWith('marker clear-point  ok')) {
+            data = data.slice(23)
+        }
+
+        let xs = data.toString().split('\n')
+        xs.forEach((element: string) => {
+            if (element.slice(0, 11) == 'show-stack ') {
+                this.stack = this.fillStack(element)
+                this.showStack(this.stack)
+            } else {
+                this.appendOutput(element)
+            }
+        });
+    }
 }
 
 export default Gforth
