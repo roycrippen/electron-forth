@@ -11,3 +11,6 @@ ipcRenderer.on("ping", (_: Event, msg: string): void => {
 
 const _global = global as any;
 _global.gforth = new Gforth()
+if (_global.gforth.fatal_error) {
+    ipcRenderer.send('app-close')
+}

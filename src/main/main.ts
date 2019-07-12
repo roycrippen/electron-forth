@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import * as path from "path";
 
 // let windows: [Electron.BrowserWindow]
@@ -55,6 +55,11 @@ app.on("activate", (): void => {
     if (mainWindow === null) {
         createWindow();
     }
+});
+
+ipcMain.on("app-close", (_: Event, msg: string): void => {
+    dialog.showErrorBox('Electron GForth', `Application had a fatal error.\n${msg}`)
+    app.quit()
 });
 
 // In this file you can include the rest of your app"s specific main process

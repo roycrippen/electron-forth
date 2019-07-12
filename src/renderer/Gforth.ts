@@ -3,12 +3,20 @@ import { spawn, ChildProcessWithoutNullStreams } from 'child_process'
 
 class Gforth {
     public p: ChildProcessWithoutNullStreams
+    public fatal_error = false
+    public fatal_error_msg  = ''
 
     private stack: string[] = []
 
     public constructor() {
-        const cmd = 'gforth'
+        const cmd = 'gfortha'
         this.p = spawn(cmd)
+        if (this.p.pid == undefined) {
+            this.fatal_error_msg = `Could not load ${cmd}\nExiting application.`
+            console.error(this.fatal_error_msg)
+            this.fatal_error = true
+            return
+        }
 
         this.p.stdout.on('data', (data: Uint8Array) => {
             this.processForthOutput(data)
