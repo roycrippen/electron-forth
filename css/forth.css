@@ -13,6 +13,14 @@ h1 {
 h3 {
     text-align: center;
 }
+textarea {
+    flex: 1;
+    display: block;
+    margin: 2px 0;
+    padding: 1px;
+    border: 1px solid;
+    resize: vertical;
+}
 .row-one {
     /* flex: 1; */
     display: flex;
@@ -28,6 +36,13 @@ h3 {
     display: flex;
     flex-flow: column;
     margin: 0px 3px;
+}
+.col-pointer {
+    width: 40px;
+    text-align: right;
+}
+#pointer::-moz-selection {
+    background-color: blue
 }
 .col-input {
     flex: 1;
@@ -46,14 +61,6 @@ h3 {
 label {
     display: block;
     padding-left: 2px;
-}
-textarea {
-    flex: 1;
-    display: block;
-    margin: 2px 0;
-    padding: 1px;
-    border: 1px solid;
-    resize: vertical;
 }
 #stack, #output, #error {
     background-color: #d4dada;

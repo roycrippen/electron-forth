@@ -1,20 +1,24 @@
 
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process'
 
+interface Fatal {
+    error: boolean,
+    msg: string
+}
+
 class Gforth {
     public p: ChildProcessWithoutNullStreams
-    public fatal_error = false
-    public fatal_error_msg  = ''
+    public fatal: Fatal = { error: false, msg: '' }
+    public fatal_error_msg = ''
 
     private stack: string[] = []
 
     public constructor() {
-        const cmd = 'gfortha'
+        const cmd = 'gforth'
         this.p = spawn(cmd)
         if (this.p.pid == undefined) {
-            this.fatal_error_msg = `Could not load ${cmd}\nExiting application.`
-            console.error(this.fatal_error_msg)
-            this.fatal_error = true
+            this.fatal.msg = `Could not load '${cmd}'\nExiting application.`
+            this.fatal.error = true
             return
         }
 
@@ -79,20 +83,70 @@ class Gforth {
         return xs
     }
 
+    private leftFillNum(num: number, width: number) {
+        return num
+            .toString()
+            .padStart(width, ' ')
+    }
+
+    private selectTextareaLine(tarea: HTMLTextAreaElement, lineNum: number): void {
+        lineNum--;
+        let lines = tarea.value.split("\n");
+
+        let startPos = 0
+        for (var x = 0; x < lines.length; x++) {
+            if (x == lineNum) {
+                break;
+            }
+            startPos += (lines[x].length + 1);
+
+        }
+        let endPos = lines[lineNum].length + startPos;
+
+        // do selection
+        if (typeof (tarea.selectionStart) != "undefined") {
+            tarea.focus();
+            tarea.selectionStart = startPos;
+            tarea.selectionEnd = endPos;
+        }
+    }
+
+    public initEditor(): void {
+        let lineNode = document.getElementById("pointer") as HTMLTextAreaElement
+        let inputNode = document.getElementById("input") as HTMLTextAreaElement
+        let input = inputNode.value.trim() + '\n';
+        if (input) {
+            let xs = input.split('\n')
+            let str = ''
+            for (let i = 1; i < xs.length; i++) {
+                const nStr = this.leftFillNum(i, 4)
+                str += `${nStr}\n`
+            }
+            if (lineNode) {
+                lineNode.value = str
+                this.selectTextareaLine(lineNode, 1)
+            }
+        }
+    }
+
+    public runToLine(_event: MouseEvent): void {
+        let lineNode = document.getElementById("pointer") as HTMLTextAreaElement
+        this.selectTextareaLine(lineNode, 6)
+        this.run(this.getCommands(11))
+    }
+
     public interpret(event: KeyboardEvent): void {
         const prep = (): void => {
             this.stack = []
             this.clearMessages()
-
-            // todo find gforth reset command
         }
 
-        if (event.key === "Enter" && event.ctrlKey) {
+        if (event.key === "Enter" && event.altKey) {
             prep()
-            this.run(this.getCommands())
-        } else if (event.ctrlKey && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
+            this.run(this.getCommands(20))
+        } else if (event.altKey && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
             prep()
-            this.run(this.getCommands(true))
+            this.run(this.getCommands(11))
         }
     }
 
@@ -108,21 +162,19 @@ class Gforth {
         this.p.stdin.write('show-stack\n')
     }
 
-    private getCommands(cursorPos: boolean = false): string {
+    private getCommands(line: number): string {
         let inputNode = document.getElementById("input") as HTMLTextAreaElement
         let input = inputNode.value.trim() + '\n';
         if (input) {
-            if (cursorPos) {
-                let xs = input.split('\n')
-                let line = xs.length
-                let pos = inputNode.selectionStart
-                line = input.substr(0, pos).split("\n").length
-                xs = xs.slice(0, line - 1)
-                input = ''
-                xs.forEach((element: string): void => {
-                    input += (`${element}\n`)
-                });
-            }
+            let xs = input.split('\n')
+            // let line = xs.length
+            // let pos = inputNode.selectionStart
+            // line = input.substr(0, pos).split("\n").length
+            xs = xs.slice(0, line - 1)
+            input = ''
+            xs.forEach((element: string): void => {
+                input += (`${element}\n`)
+            });
             return input
         }
         return ""
