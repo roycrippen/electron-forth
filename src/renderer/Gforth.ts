@@ -90,8 +90,11 @@ class Gforth {
     }
 
     private selectTextareaLine(tarea: HTMLTextAreaElement, lineNum: number): void {
-        lineNum--;
         let lines = tarea.value.split("\n");
+        if (lineNum < 1 || lineNum > lines.length - 1 ) {
+            return
+        }
+        lineNum--;
 
         let startPos = 0
         for (var x = 0; x < lines.length; x++) {
@@ -111,6 +114,22 @@ class Gforth {
         }
     }
 
+    private getLine(): number {
+        let node = document.getElementById("pointer") as HTMLTextAreaElement
+        if (node) {
+            const num = node.value.substr(0, node.selectionStart).split("\n").length
+            return num
+        }
+        return 1
+    }
+
+    private setLine(line: number): void {
+        let node = document.getElementById("pointer") as HTMLTextAreaElement
+        if (node) {
+            this.selectTextareaLine(node, line)
+        }
+    }
+
     public initEditor(): void {
         let lineNode = document.getElementById("pointer") as HTMLTextAreaElement
         let inputNode = document.getElementById("input") as HTMLTextAreaElement
@@ -118,21 +137,25 @@ class Gforth {
         if (input) {
             let xs = input.split('\n')
             let str = ''
-            for (let i = 1; i < xs.length; i++) {
+            for (let i = 1; i < xs.length + 1; i++) {
                 const nStr = this.leftFillNum(i, 4)
                 str += `${nStr}\n`
             }
             if (lineNode) {
                 lineNode.value = str
-                this.selectTextareaLine(lineNode, 1)
+                this.setLine(1)
             }
+            inputNode.focus();
         }
     }
 
-    public runToLine(_event: MouseEvent): void {
+    public runToClickedLine(_event: MouseEvent): void {
         let lineNode = document.getElementById("pointer") as HTMLTextAreaElement
-        this.selectTextareaLine(lineNode, 6)
-        this.run(this.getCommands(11))
+        const line = this.getLine()
+        this.selectTextareaLine(lineNode, line)
+        this.stack = []
+        this.clearMessages()
+        this.run(this.getCommands(line + 1))
     }
 
     public interpret(event: KeyboardEvent): void {
@@ -141,12 +164,24 @@ class Gforth {
             this.clearMessages()
         }
 
-        if (event.key === "Enter" && event.altKey) {
+        let line = 1
+        if (event.altKey && (event.key == "Enter" || event.key == "ArrowDown" || event.key == "ArrowUp")) {
             prep()
-            this.run(this.getCommands(20))
-        } else if (event.altKey && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
-            prep()
-            this.run(this.getCommands(11))
+            switch (event.key) {
+                case "Enter":
+                    line = 20
+                    break
+                case "ArrowDown":
+                    line = this.getLine() + 1
+                    break
+                case "ArrowUp":
+                    line = this.getLine() - 1
+                    break
+                default:
+                    break
+            }
+            this.setLine(line)
+            this.run(this.getCommands(line + 1))
         }
     }
 

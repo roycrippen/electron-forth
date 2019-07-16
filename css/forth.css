@@ -39,10 +39,14 @@ textarea {
 }
 .col-pointer {
     width: 40px;
+    max-width: 40px;
+    min-width: 40-px;
     text-align: right;
+    resize: vertical;
+    overflow: hidden;
 }
 #pointer::-moz-selection {
-    background-color: blue
+    background-color: blue;
 }
 .col-input {
     flex: 1;
