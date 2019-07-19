@@ -98,6 +98,7 @@ class Gforth {
     }
 
     private movePointer(lineNum: number): void {
+        // todo: make line-num, pointer and input a single testarea
         const l = Math.max(Math.min(lineNum, this.inputLines), 1)
         const s = '\n'.repeat(l - 1) + this.pointerSymbol
         this.pointerNode.value = s
@@ -129,9 +130,15 @@ class Gforth {
     }
 
     public initLines(): void {
-        this.inputNode = document.getElementById("input") as HTMLTextAreaElement
+        this.inputNode = document.getElementById('input') as HTMLTextAreaElement
+        this.inputNode.addEventListener('scroll', () => this.inputScroll())
+        this.inputNode.addEventListener('keydown', (e) => this.interpret(e))
+
         this.lineNumNode = document.getElementById("line-num") as HTMLTextAreaElement
+        this.lineNumNode.addEventListener('click', (e) => this.runToClickedLine(e))
+
         this.pointerNode = document.getElementById("pointer") as HTMLTextAreaElement
+
         this.setLine()
         this.addLineNumbers()
         this.inputNode.focus()
@@ -149,8 +156,8 @@ class Gforth {
         }
     }
 
-    public runToClickedLine(_event: MouseEvent): void {
-        const line = this.getLine()
+    public runToClickedLine(_e: MouseEvent): void {
+        const line = Math.floor(this.lineNumNode.selectionStart / 4)
         this.movePointer(line)
         this.stack = []
         this.clearMessages()
@@ -165,6 +172,11 @@ class Gforth {
             if (this.inputLines != parseInt(last))
                 this.addLineNumbers()
         }
+    }
+
+    public inputScroll(): void {
+        this.lineNumNode.scrollTop = this.inputNode.scrollTop
+        this.pointerNode.scrollTop = this.inputNode.scrollTop
     }
 
     public interpret(event: KeyboardEvent): void {

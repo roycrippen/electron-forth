@@ -10,28 +10,24 @@
 <body onload="gforth.initLines()">
     <h3>Forth Execution Engine and Debugger</h3>
     <div class="row-one">
-        <div>
+        <div class="col">
             <label for="line-num">
                 <font color="white">line</font>
             </label>
-            <textarea class="col col-line-num" id="line-num" rows=25 readonly
-                onclick="gforth.runToClickedLine()"></textarea>
+            <textarea class="col col-line-num" id="line-num" rows=25 readonly></textarea>
         </div>
-        <div>
+        <div class="col">
             <label for="pointer">
                 <font color="white">line</font>
             </label>
-            <textarea class="col col-pointer" id="pointer" rows=25 readonly>
-
-=>
-            </textarea>
+            <textarea class="col col-pointer" id="pointer" rows=25 readonly></textarea>
         </div>
         <div class="col col-input">
             <label for="input">Forth Commands</label>
             <!-- <textarea id="input" rows=25"
                 onkeyup="gforth.interpret(event)">include ~+/forth/fth_tests/runtests.fth</textarea> -->
             <!-- <textarea id="input" rows=25 onkeydown="gforth.interpret(event)">include ~+/forth/scratch.fth</textarea> -->
-            <textarea id="input" rows=25 onkeydown="gforth.interpret(event)">
+            <textarea id="input" rows=25>
 1 2 3
 .s
 +
