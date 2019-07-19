@@ -3,13 +3,8 @@ include ~+/forth/simple-lib.fth
 
 2 
 dup square
-dup square
-dup square
-
 show-stack-aaa
-
 say-roy
-
 1 2 3 
 .s
 
@@ -21,4 +16,3 @@ say-roy
 rot
 rot
 rot
-.s

@@ -7,36 +7,34 @@
     <script src='../dist-js/ui-bundle.js' type="text/javascript"></script>
 </head>
 
-<body onload="gforth.initEditor()">
+<body onload="gforth.initLines()">
     <h3>Forth Execution Engine and Debugger</h3>
     <div class="row-one">
-        <div class="col-pointer">
-            <label for="pointer">line</label>
-            <textarea id="pointer" rows=25 readonly onclick="gforth.runToClickedLine()" onkeydown="gforth.interpret(event)"></textarea>
+        <div>
+            <label for="line-num">
+                <font color="white">line</font>
+            </label>
+            <textarea class="col col-line-num" id="line-num" rows=25 readonly
+                onclick="gforth.runToClickedLine()"></textarea>
+        </div>
+        <div>
+            <label for="pointer">
+                <font color="white">line</font>
+            </label>
+            <textarea class="col col-pointer" id="pointer" rows=25 readonly>
+
+=>
+            </textarea>
         </div>
         <div class="col col-input">
             <label for="input">Forth Commands</label>
-            <!-- <textarea id="input" rows=20
+            <!-- <textarea id="input" rows=25"
                 onkeyup="gforth.interpret(event)">include ~+/forth/fth_tests/runtests.fth</textarea> -->
+            <!-- <textarea id="input" rows=25 onkeydown="gforth.interpret(event)">include ~+/forth/scratch.fth</textarea> -->
             <textarea id="input" rows=25 onkeydown="gforth.interpret(event)">
-\ testing file
-include ~+/forth/simple-lib.fth
-
-2 
-dup square
-show-stack-aaa
-say-roy
-1 2 3 
+1 2 3
 .s
-
-10 20 + dup .
-
-3
-2
-1
-rot
-rot
-rot
++
 .s</textarea>
         </div>
         <div class="col col-stack">
@@ -52,7 +50,7 @@ rot
         </div>
         <div class="col col-error">
             <label for="error">Error</label>
-            <textarea id="error" rows=20 readonly></textarea>
+            <textarea id="error" rows=25 readonly></textarea>
         </div>
     </div>
 

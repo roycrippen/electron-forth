@@ -22,12 +22,10 @@ textarea {
     resize: vertical;
 }
 .row-one {
-    /* flex: 1; */
     display: flex;
     flex-flow: row-one;
 }
 .row-two {
-    /* flex: 1; */
     margin-top: 10px;
     display: flex;
     flex-flow: row-two;
@@ -35,18 +33,28 @@ textarea {
 .col {
     display: flex;
     flex-flow: column;
-    margin: 0px 3px;
+    margin: 0px 2px;
 }
 .col-pointer {
-    width: 40px;
-    max-width: 40px;
-    min-width: 40-px;
+    width: 12px;
+    color: red;
     text-align: right;
     resize: vertical;
     overflow: hidden;
+    border: none;
+    outline: none;
+}
+.col-line-num {
+    width: 40px;
+    text-align: right;
+    resize: vertical;
+    overflow: hidden;
+    border: none;
+    outline: none
 }
 #pointer::-moz-selection {
     background-color: blue;
+    color: red;
 }
 .col-input {
     flex: 1;

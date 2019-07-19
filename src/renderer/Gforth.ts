@@ -9,11 +9,19 @@ interface Fatal {
 class Gforth {
     public p: ChildProcessWithoutNullStreams
     public fatal: Fatal = { error: false, msg: '' }
-    public fatal_error_msg = ''
-
+    private inputLines = 0
     private stack: string[] = []
+    private inputNode: HTMLTextAreaElement
+    private pointerNode: HTMLTextAreaElement
+    private lineNumNode: HTMLTextAreaElement
+    private pointerSymbol = '\u2B95'  //'\u25BA'
 
     public constructor() {
+        // temp valid values
+        this.inputNode = document.createElement("textarea");
+        this.pointerNode = document.createElement("textarea");
+        this.lineNumNode = document.createElement("textarea");
+
         const cmd = 'gforth'
         this.p = spawn(cmd)
         if (this.p.pid == undefined) {
@@ -89,73 +97,74 @@ class Gforth {
             .padStart(width, ' ')
     }
 
-    private selectTextareaLine(tarea: HTMLTextAreaElement, lineNum: number): void {
-        let lines = tarea.value.split("\n");
-        if (lineNum < 1 || lineNum > lines.length - 1 ) {
-            return
-        }
-        lineNum--;
-
-        let startPos = 0
-        for (var x = 0; x < lines.length; x++) {
-            if (x == lineNum) {
-                break;
-            }
-            startPos += (lines[x].length + 1);
-
-        }
-        let endPos = lines[lineNum].length + startPos;
-
-        // do selection
-        if (typeof (tarea.selectionStart) != "undefined") {
-            tarea.focus();
-            tarea.selectionStart = startPos;
-            tarea.selectionEnd = endPos;
-        }
+    private movePointer(lineNum: number): void {
+        const l = Math.max(Math.min(lineNum, this.inputLines), 1)
+        const s = '\n'.repeat(l - 1) + this.pointerSymbol
+        this.pointerNode.value = s
     }
 
     private getLine(): number {
-        let node = document.getElementById("pointer") as HTMLTextAreaElement
+        let node = this.pointerNode
         if (node) {
-            const num = node.value.substr(0, node.selectionStart).split("\n").length
+            const num = node.value.split("\n").length
             return num
         }
         return 1
     }
 
-    private setLine(line: number): void {
-        let node = document.getElementById("pointer") as HTMLTextAreaElement
+    private selectLine(line: number): void {
+        let node = this.lineNumNode
         if (node) {
-            this.selectTextareaLine(node, line)
+            this.movePointer(line)
+            this.inputNode.focus()
         }
     }
 
-    public initEditor(): void {
-        let lineNode = document.getElementById("pointer") as HTMLTextAreaElement
-        let inputNode = document.getElementById("input") as HTMLTextAreaElement
-        let input = inputNode.value.trim() + '\n';
+    private setLine(): void {
+        let input = this.inputNode.value.trim() + '\n';
         if (input) {
             let xs = input.split('\n')
-            let str = ''
-            for (let i = 1; i < xs.length + 1; i++) {
-                const nStr = this.leftFillNum(i, 4)
-                str += `${nStr}\n`
-            }
-            if (lineNode) {
-                lineNode.value = str
-                this.setLine(1)
-            }
-            inputNode.focus();
+            this.inputLines = xs.length
+        }
+    }
+
+    public initLines(): void {
+        this.inputNode = document.getElementById("input") as HTMLTextAreaElement
+        this.lineNumNode = document.getElementById("line-num") as HTMLTextAreaElement
+        this.pointerNode = document.getElementById("pointer") as HTMLTextAreaElement
+        this.setLine()
+        this.addLineNumbers()
+        this.inputNode.focus()
+    }
+
+    private addLineNumbers(): void {
+        let str = ''
+        for (let i = 1; i < this.inputLines + 1; i++) {
+            const nStr = this.leftFillNum(i, 4)
+            str += `${nStr}\n`
+        }
+        if (this.lineNumNode) {
+            this.lineNumNode.value = str
+            this.selectLine(1)
         }
     }
 
     public runToClickedLine(_event: MouseEvent): void {
-        let lineNode = document.getElementById("pointer") as HTMLTextAreaElement
         const line = this.getLine()
-        this.selectTextareaLine(lineNode, line)
+        this.movePointer(line)
         this.stack = []
         this.clearMessages()
         this.run(this.getCommands(line + 1))
+    }
+
+    public inputChanged(): void {
+        this.setLine()
+        let lineNode = document.getElementById("line-num") as HTMLTextAreaElement
+        const last = lineNode.value.trim().slice(-4)
+        if (lineNode) {
+            if (this.inputLines != parseInt(last))
+                this.addLineNumbers()
+        }
     }
 
     public interpret(event: KeyboardEvent): void {
@@ -163,6 +172,8 @@ class Gforth {
             this.stack = []
             this.clearMessages()
         }
+
+        this.inputChanged()
 
         let line = 1
         if (event.altKey && (event.key == "Enter" || event.key == "ArrowDown" || event.key == "ArrowUp")) {
@@ -180,7 +191,7 @@ class Gforth {
                 default:
                     break
             }
-            this.setLine(line)
+            this.selectLine(line)
             this.run(this.getCommands(line + 1))
         }
     }
@@ -202,9 +213,6 @@ class Gforth {
         let input = inputNode.value.trim() + '\n';
         if (input) {
             let xs = input.split('\n')
-            // let line = xs.length
-            // let pos = inputNode.selectionStart
-            // line = input.substr(0, pos).split("\n").length
             xs = xs.slice(0, line - 1)
             input = ''
             xs.forEach((element: string): void => {
