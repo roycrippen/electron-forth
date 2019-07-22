@@ -1,16 +1,91 @@
-import { app, BrowserWindow, ipcMain, dialog } from "electron";
+import { app, BrowserWindow, ipcMain, dialog, Menu, MenuItemConstructorOptions, OpenDialogOptions } from "electron";
 import * as path from "path";
 
 // let windows: [Electron.BrowserWindow]
 // let mainWindow: Electron.BrowserWindow | null;
 let mainWindow: BrowserWindow;
 
-function createWindow(): void {
+
+const options: OpenDialogOptions = {
+    properties: ['openFile'],
+    defaultPath: app.getAppPath()
+}
+
+
+const template: MenuItemConstructorOptions[] = [
+    {
+        label: 'File',
+        submenu: [
+            {
+                label: 'File Open...',
+                click() {
+                    dialog.showOpenDialog(mainWindow, options, (files) => {
+                        if (files !== undefined) {
+                            mainWindow.webContents.send('file-open', files[0])
+                        }
+                    })
+                }
+            },
+            { role: 'quit' }
+        ]
+    },
+    // { role: 'editMenu' }
+    {
+        label: 'Edit',
+        submenu: [
+            { role: 'undo' },
+            { role: 'redo' },
+            { type: 'separator' },
+            { role: 'cut' },
+            { role: 'copy' },
+            { role: 'paste' },
+            { role: 'delete' },
+            { type: 'separator' },
+            { role: 'selectAll' }
+        ]
+    },
+    // { role: 'viewMenu' }
+    {
+        label: 'View',
+        submenu: [
+            { role: 'reload' },
+            { role: 'forcereload' },
+            { role: 'toggledevtools' },
+            { type: 'separator' },
+            { role: 'resetzoom' },
+            { role: 'zoomin' },
+            { role: 'zoomout' },
+            { type: 'separator' },
+            { role: 'togglefullscreen' }
+        ]
+    },
+    // { role: 'windowMenu' }
+    {
+        label: 'Window',
+        submenu: [
+            { role: 'minimize' },
+            { role: 'zoom' },
+            { role: 'close' }
+        ]
+    },
+    {
+        role: 'help',
+        submenu: [
+            {
+                label: 'Learn More',
+                click() { console.log('help menu clicked') }
+            }
+        ]
+    }
+]
+
+
+const createWindow = (): void => {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         height: 1200,
         width: 2400,
-        title: "my window title",
+        title: 'Electron Gforth',
         webPreferences: {
             nodeIntegration: true,
         },
@@ -23,7 +98,7 @@ function createWindow(): void {
     mainWindow.webContents.openDevTools();
 
     mainWindow.webContents.on("did-finish-load", (): void => {
-        mainWindow.webContents.send("ping", "ping message! aaa");
+        mainWindow.webContents.send("alive", "gforth application is alive");
     });
 
     // Emitted when the window is closed.
@@ -33,6 +108,9 @@ function createWindow(): void {
         // when you should delete the corresponding element.
         // mainWindow = null;
     });
+
+    const menu = Menu.buildFromTemplate(template)
+    Menu.setApplicationMenu(menu)
 }
 
 // This method will be called when Electron has finished
@@ -62,9 +140,3 @@ ipcMain.on("app-close", (_: Event, msg: string): void => {
     app.quit()
 });
 
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.
-ipcMain.on("pong", (_: Event, msg: string): void => {
-    // eslint-disable-next-line no-console
-    console.log(msg);
-});

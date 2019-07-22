@@ -1,5 +1,6 @@
 
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process'
+import { readFileSync } from 'fs'
 
 interface Fatal {
     error: boolean,
@@ -135,12 +136,13 @@ class Gforth {
         this.inputNode.addEventListener('keydown', (e) => this.interpret(e))
 
         this.lineNumNode = document.getElementById("line-num") as HTMLTextAreaElement
-        this.lineNumNode.addEventListener('click', (e) => this.runToClickedLine(e))
+        this.lineNumNode.addEventListener('click', () => this.runToClickedLine())
 
         this.pointerNode = document.getElementById("pointer") as HTMLTextAreaElement
 
         this.setLine()
         this.addLineNumbers()
+        setTimeout(() => this.run(this.getCommands(1)), 100)
         this.inputNode.focus()
     }
 
@@ -156,12 +158,12 @@ class Gforth {
         }
     }
 
-    public runToClickedLine(_e: MouseEvent): void {
+    public runToClickedLine(): void {
         const line = Math.floor(this.lineNumNode.selectionStart / 4)
         this.movePointer(line)
         this.stack = []
         this.clearMessages()
-        this.run(this.getCommands(line + 1))
+        this.run(this.getCommands(line))
     }
 
     public inputChanged(): void {
@@ -196,15 +198,17 @@ class Gforth {
                     break
                 case "ArrowDown":
                     line = this.getLine() + 1
+                    line == this.inputLines ? line-- : line
                     break
                 case "ArrowUp":
                     line = this.getLine() - 1
+                    line == 0 ? line = 1 : line
                     break
                 default:
                     break
             }
             this.selectLine(line)
-            this.run(this.getCommands(line + 1))
+            this.run(this.getCommands(line))
         }
     }
 
@@ -225,7 +229,7 @@ class Gforth {
         let input = inputNode.value.trim() + '\n';
         if (input) {
             let xs = input.split('\n')
-            xs = xs.slice(0, line - 1)
+            xs = xs.slice(0, line)
             input = ''
             xs.forEach((element: string): void => {
                 input += (`${element}\n`)
@@ -270,6 +274,19 @@ class Gforth {
                 this.appendOutput(element)
             }
         });
+    }
+
+    public fileOpen(file: string) {
+
+        const src = readFileSync(file)
+        if (src.length > 0) {
+            this.inputNode.value = `${src}`
+            this.clearMessages()
+            this.setLine()
+            this.addLineNumbers()
+            setTimeout(() => this.run(this.getCommands(1)), 100)
+            this.inputNode.focus()
+        }
     }
 }
 

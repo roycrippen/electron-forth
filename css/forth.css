@@ -50,7 +50,8 @@ textarea {
     resize: vertical;
     overflow: hidden;
     border: none;
-    outline: none
+    outline: none;
+    margin-top: 3px;
 }
 #pointer::-moz-selection {
     background-color: blue;
