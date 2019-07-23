@@ -12,7 +12,7 @@ Requires [gforth](https://www.gnu.org/software/gforth/).
 git clone https://github.com/roycrippen/electron-forth.git
 
 # goto directory
-cd electron-ts-template
+cd electron-forth
 
 # install dependencies
 $ npm install
